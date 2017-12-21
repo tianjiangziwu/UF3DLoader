@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleJson;
 using UnityEngine;
+using System.Runtime;
+using Newtonsoft;
 
 public class ParticleSystem
 {
@@ -14,7 +15,7 @@ public class ParticleSystem
     private float frameSpeed = 0;
     private int texId = -1;
     private uint surfId = 0;
-    private SimpleJson.JsonObject jsonObj = null;
+    private System.Object jsonObj = null;
     private Matrix4x4 matrix;
 
     //粒子发射器
@@ -126,7 +127,7 @@ public class ParticleSystem
         }
     }
 
-    public JsonObject JsonObj
+    public System.Object JsonObj
     {
         get
         {
@@ -148,8 +149,8 @@ public class ParticleSystem
     /// 反序列化
     /// </summary>
     /// <param name="data">json数据</param>
-    public void deserialize(JsonObject data)
+    public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
-        emitter.deserialize(data["emitter"] as JsonObject);
+        emitter.deserialize(data["emitter"] as Newtonsoft.Json.Linq.JObject);
     }
 }

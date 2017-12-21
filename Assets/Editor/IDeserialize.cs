@@ -5,5 +5,5 @@ using System.Text;
 
 public interface IDeserialize
 {
-    void deserialize(SimpleJson.JsonObject data);
+    void deserialize(Newtonsoft.Json.Linq.JObject data);
 }

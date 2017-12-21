@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System;
 using System.Collections.Generic;
-using SimpleJson;
+using Newtonsoft.Json.Linq;
 
 public class Uf3dLoader
 {
@@ -244,16 +244,15 @@ public class Uf3dLoader
         int texId = data.Bytes.ReadUInt16();
         uint surfId = data.Bytes.ReadUInt16();
         string jsonStr = ReadUtil.ReadUTF(data.Bytes);
-        JsonObject jsonObject = SimpleJson.SimpleJson.DeserializeObject<JsonObject>(jsonStr);
+        JObject jsonObject = JObject.Parse(jsonStr);
         ParticleSystem ps = new ParticleSystem();
         ps.Name = name;
         ps.Layer = layer;
         ps.Matrix = matrix;
         ps.TexId = texId;
         ps.SurfId = surfId;
-        ps.JsonObj = jsonObject;
         ps.Parent = parent;
-        ps.deserialize(ps.JsonObj);
+        ps.deserialize(jsonObject);
         particleSystemList.Add(ps);
         System.Diagnostics.Debug.WriteLine("粒子名字:{0}", name);
     }

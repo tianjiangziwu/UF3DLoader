@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleJson;
 
 public class SphereShape : IDeserialize
 {
@@ -35,11 +34,10 @@ public class SphereShape : IDeserialize
         }
     }
 
-    public void deserialize(JsonObject data)
+    public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
-        string str = data["radiusBig"] as string;
-        radiusBig = float.Parse(str);
-        radiusSmall = float.Parse(data["radiusSmall"] as string);
+        radiusBig = (float)data["radiusBig"];
+        radiusSmall = (float)data["radiusSmall"];
     }
 }
 
