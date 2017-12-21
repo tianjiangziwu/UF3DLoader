@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
 
+/// <summary>
+/// 与UnityEditor编辑器相关
+/// </summary>
 public class UF3DMenu
 {
     private static string sourceFile = string.Empty;
