@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 public class Texture3D
 {
@@ -37,29 +38,58 @@ public class Texture3D
     private int filterMode = FILTER_LINEAR;
     private int wrapMode = WRAP_REPEAT;
     private int mipMode = MIP_LINEAR;
-    public int typeMode = TYPE_2D;
+    private int typeMode = TYPE_2D;
     private string format = string.Empty;
     private string name = string.Empty;
     private bool isATF = false;
 
-    public string Name
+    private string unityAssetsPath = string.Empty;
+
+    public bool OptimizeForRenderToTexture
     {
         get
         {
-            return name;
+            return _optimizeForRenderToTexture;
         }
 
         set
         {
-            name = value;
+            _optimizeForRenderToTexture = value;
         }
     }
 
+    public byte[] Data
+    {
+        get
+        {
+            return data;
+        }
+
+        set
+        {
+            data = value;
+        }
+    }
+
+    /// <summary>
+    /// 转换到unity的模式
+    /// </summary>
     public int FilterMode
     {
         get
         {
-            return filterMode;
+            if (filterMode == FILTER_NEAREST)
+            {
+                return (int)UnityEngine.FilterMode.Point;
+            }
+            else if (filterMode == FILTER_LINEAR)
+            {
+                return (int)UnityEngine.FilterMode.Bilinear;
+            }
+            else
+            {
+                return (int)UnityEngine.FilterMode.Trilinear;
+            }
         }
 
         set
@@ -72,7 +102,14 @@ public class Texture3D
     {
         get
         {
-            return wrapMode;
+            if (wrapMode == WRAP_CLAMP)
+            {
+                return (int)TextureWrapMode.Clamp;
+            }
+            else
+            {
+                return (int)TextureWrapMode.Repeat;
+            }
         }
 
         set
@@ -91,6 +128,71 @@ public class Texture3D
         set
         {
             mipMode = value;
+        }
+    }
+
+    public int TypeMode
+    {
+        get
+        {
+            return typeMode;
+        }
+
+        set
+        {
+            typeMode = value;
+        }
+    }
+
+    public string Format
+    {
+        get
+        {
+            return format;
+        }
+
+        set
+        {
+            format = value;
+        }
+    }
+
+    public string Name
+    {
+        get
+        {
+            return name;
+        }
+
+        set
+        {
+            name = value;
+        }
+    }
+
+    public bool IsATF
+    {
+        get
+        {
+            return isATF;
+        }
+
+        set
+        {
+            isATF = value;
+        }
+    }
+
+    public string UnityAssetsPath
+    {
+        get
+        {
+            return unityAssetsPath;
+        }
+
+        set
+        {
+            unityAssetsPath = value;
         }
     }
 
