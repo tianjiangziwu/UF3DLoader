@@ -15,7 +15,6 @@ public class ParticleSystem
     private float frameSpeed = 0;
     private int texId = -1;
     private uint surfId = 0;
-    private System.Object jsonObj = null;
     private Matrix4x4 matrix;
 
     //粒子发射器
@@ -124,19 +123,6 @@ public class ParticleSystem
         set
         {
             matrix = value;
-        }
-    }
-
-    public System.Object JsonObj
-    {
-        get
-        {
-            return jsonObj;
-        }
-
-        set
-        {
-            jsonObj = value;
         }
     }
 

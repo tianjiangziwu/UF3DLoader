@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class BoxShape : IDeserialize
+public class BoxShape : IShape
 {
     private UnityEngine.Vector3 rectFrom;
     private UnityEngine.Vector3 rectTo;

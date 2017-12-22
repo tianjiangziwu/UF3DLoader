@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class CylinderShape : IDeserialize
+public class CylinderShape : IShape
 {
     // 内径
     private float radiusSmall;

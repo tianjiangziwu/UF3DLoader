@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class SphereShape : IDeserialize
+public class SphereShape : IShape
 {
     private float radiusBig = 0;
     private float radiusSmall = 0;
