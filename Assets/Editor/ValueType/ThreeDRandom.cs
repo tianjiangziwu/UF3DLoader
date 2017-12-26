@@ -24,4 +24,12 @@ public class ThreeDRandom : IThreeDValue
         throw new NotImplementedException();
     }
 
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    {
+        var ret = new List<UnityEngine.ParticleSystem.MinMaxCurve>();
+        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(min.x, max.x));
+        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(min.y, max.y));
+        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(min.z, max.z));
+        return ret;
+    }
 }

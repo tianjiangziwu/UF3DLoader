@@ -45,6 +45,17 @@ public class ThreeDCurve : IThreeDValue
         }
     }
 
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    {
+        var ret = new List<UnityEngine.ParticleSystem.MinMaxCurve>();
+        List<List<CurveAnchor>> tmp = new List<List<CurveAnchor>> { anchorsX, anchorsY, anchorsZ };
+        for (int i = 0; i < tmp.Count; ++i)
+        {
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(tmp[i])));
+        }
+        return ret;
+    }
+
     public Vector3 getValue(float ratio)
     {
         throw new NotImplementedException();

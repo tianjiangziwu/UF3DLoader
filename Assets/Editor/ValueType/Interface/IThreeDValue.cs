@@ -7,4 +7,6 @@ using System.Text;
 public interface IThreeDValue : IValue
 {
     UnityEngine.Vector3 getValue(float ratio);
+
+    List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve();
 }

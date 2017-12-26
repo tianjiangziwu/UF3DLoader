@@ -30,4 +30,14 @@ public class ValueTypeUtil
         gradient.SetKeys(gck, gak);
         return gradient;
     }
+
+    public static UnityEngine.AnimationCurve GenerateAnimationCurve(List<CurveAnchor> anchors)
+    {
+        var curve = new UnityEngine.AnimationCurve();
+        foreach (CurveAnchor point in anchors)
+        {
+            curve.AddKey(point.Time, point.Value);
+        }
+        return curve;
+    }
 }

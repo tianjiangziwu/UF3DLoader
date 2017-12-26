@@ -42,12 +42,7 @@ public class OneDCurve : IOneDValue
 
     public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
-        var curve = new AnimationCurve();
-        foreach (CurveAnchor point in anchors)
-        {
-            curve.AddKey(point.Time, point.Value);
-        }
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, curve);  
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(anchors));  
         return ret;
     }
 }

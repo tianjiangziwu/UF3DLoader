@@ -124,4 +124,19 @@ public class TransformUtil
         matrix.m23 = offset.z;
         return matrix;
     }
+
+    /// <summary>
+    /// 使用不含平移元素的转换矩阵将 Vector3D 对象从一个空间坐标转换到另一个空间坐标 
+    /// </summary>
+    public static Vector3 DeltaTransformVector(Matrix4x4 matrix, Vector3 point)
+    {
+        Vector3 position;
+        Quaternion localRotation;
+        Vector3 localScale;
+
+        DecomposeMatrix(ref matrix, out position, out localRotation, out localScale);
+        position.Set(0.0f, 0.0f, 0.0f);
+        Matrix4x4 newMatrix = Matrix4x4.TRS(position, localRotation, localScale);
+        return newMatrix.MultiplyPoint(point);
+    }
 }
