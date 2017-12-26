@@ -25,9 +25,4 @@ public class ThreeDSphere : IThreeDValue
         throw new NotImplementedException();
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
 }

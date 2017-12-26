@@ -56,8 +56,4 @@ public class ColorGradientValue : IColorValue
         throw new NotImplementedException();
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
-    {
-        throw new NotImplementedException();
-    }
 }

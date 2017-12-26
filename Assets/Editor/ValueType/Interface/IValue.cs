@@ -8,5 +8,5 @@ using System.Text;
 /// </summary>
 public interface IValue:IDeserialize
 {
-    UnityEngine.ParticleSystem.MinMaxCurve getCurve();
+    
 }

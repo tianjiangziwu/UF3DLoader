@@ -19,7 +19,8 @@ public class OneDConst : IOneDValue
 
     public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
-        throw new NotImplementedException();
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(value);
+        return ret;
     }
 
     public float getMaxValue()

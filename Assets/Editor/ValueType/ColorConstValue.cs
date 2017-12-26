@@ -27,11 +27,6 @@ public class ColorConstValue : IColorValue
         value = (uint)data["value"];
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
     public uint getValue(float ratio)
     {
         throw new NotImplementedException();
