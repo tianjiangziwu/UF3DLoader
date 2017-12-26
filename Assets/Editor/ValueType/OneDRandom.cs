@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 public class OneDRandom : IOneDValue
 {
@@ -21,6 +22,26 @@ public class OneDRandom : IOneDValue
     }
 
     public float getValue(float ratio)
+    {
+        throw new NotImplementedException();
+    }
+
+    float IOneDValue.getValue(float ratio)
+    {
+        throw new NotImplementedException();
+    }
+
+    float IOneDValue.getMaxValue()
+    {
+        throw new NotImplementedException();
+    }
+
+    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
+    {
+        throw new NotImplementedException();
+    }
+
+    void IDeserialize.deserialize(JObject data)
     {
         throw new NotImplementedException();
     }

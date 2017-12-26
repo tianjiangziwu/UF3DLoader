@@ -9,6 +9,18 @@ public class BoxShape : IShape
     private UnityEngine.Vector3 rectFrom;
     private UnityEngine.Vector3 rectTo;
 
+    public Vector3 getScale()
+    {
+        Vector3 scale = new Vector3();
+        scale = rectTo - rectFrom;
+        return scale;
+    }
+
+    public Vector3 getPosition()
+    {
+        return getScale() / 2;
+    }
+
     /// <summary>
     /// do not exchange y,z
     /// </summary>

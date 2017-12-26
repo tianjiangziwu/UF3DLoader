@@ -84,6 +84,7 @@ public class SceneFileCopy
         SourcePath = ofn.file.Substring(0, ofn.file.IndexOf(ofn.fileTitle));
         createDirectory(GetAbsoluteTextureDir());
         createDirectory(GetAbsoluteMaterialDir());
+        createDirectory(GetAbsoluteMeshDir());
     }
 
     public static string GetAbsoluteTextureDir()
@@ -104,6 +105,16 @@ public class SceneFileCopy
     public static string GetRelativeMaterialDir()
     {
         return "Assets/Resources/Materials/";
+    }
+
+    public static string GetAbsoluteMeshDir()
+    {
+        return workBaseDirectory + "/Resources/Meshes/";
+    }
+
+    public static string GetRelativeMeshDir()
+    {
+        return "Assets/Resources/Meshes/";
     }
 
     public static void createDirectory(string path, bool removeOld = false)

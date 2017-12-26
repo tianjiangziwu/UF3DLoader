@@ -26,6 +26,45 @@ public class Uf3dLoader
         }
     }
 
+    public List<ParticleSystem> ParticleSystemList
+    {
+        get
+        {
+            return particleSystemList;
+        }
+
+        set
+        {
+            particleSystemList = value;
+        }
+    }
+
+    public Dictionary<int, Matrix4x4> CascadeTransform
+    {
+        get
+        {
+            return cascadeTransform;
+        }
+
+        set
+        {
+            cascadeTransform = value;
+        }
+    }
+
+    public Dictionary<int, object> Resource
+    {
+        get
+        {
+            return resource;
+        }
+
+        set
+        {
+            resource = value;
+        }
+    }
+
     public bool parse(string path)
     {
         if (System.IO.Path.GetExtension(path).ToLower() == ".uf3d")
@@ -105,7 +144,7 @@ public class Uf3dLoader
                                     {
                                         this.loadDataChunk(binReader);
                                     }
-                                    AssembleParticleSystem();
+                                    ParticleSystemAssembler.Assemble(this);
                                 }
                             }
                         }
@@ -126,78 +165,9 @@ public class Uf3dLoader
         }
     }
 
-    private void AssembleParticleSystem()
-    {
-        for (int i = 0; i < particleSystemList.Count; i++)
-        {
-            ParticleSystem ps = particleSystemList[i];
-            AssembleTexture(ps);
-            AssembleMaterial(ps);
-            
-        }
-    }
+    
 
-    private void AssembleMaterial(ParticleSystem ps)
-    {
-        string texName = (resource[ps.TexId] as Texture3D).Name;
-
-        string materialName = SceneFileCopy.GetRelativeMaterialDir() + texName.Substring(0, texName.Length - 4) + ".mat";
-
-        UnityEditor.AssetDatabase.Refresh();
-    }
-
-    /// <summary>
-    /// 把纹理放到编辑器中去
-    /// </summary>
-    /// <param name="ps"></param>
-    private void AssembleTexture(ParticleSystem ps)
-    {
-        Texture3D tex = resource[ps.TexId] as Texture3D;
-        if (tex.IsATF)
-        {
-
-        }
-        else
-        {
-            //实例化一个Texture2D，宽和高设置可以是任意的，因为当使用LoadImage方法会对Texture2D的宽和高会做相应的调整
-            //Texture2D tex2D = new Texture2D(1,1);
-            //tex2D.LoadImage(tex.Data);
-            string fileName = SceneFileCopy.GetAbsoluteTextureDir() + tex.Name;
-            SaveFile(fileName, tex.Data);
-            fileName = SceneFileCopy.GetRelativeTextureDir() + tex.Name;
-            tex.UnityAssetsPath = fileName;
-            Texture2D tex2D = UnityEditor.AssetDatabase.LoadAssetAtPath(fileName, typeof(Texture2D)) as Texture2D;
-            UnityEditor.TextureImporter textureImporter = UnityEditor.AssetImporter.GetAtPath(fileName) as UnityEditor.TextureImporter;
-            UnityEditor.TextureImporterSettings settings = new UnityEditor.TextureImporterSettings();
-            textureImporter.ReadTextureSettings(settings);
-            settings.ApplyTextureType(UnityEditor.TextureImporterType.Advanced, false);
-            textureImporter.SetTextureSettings(settings);
-            textureImporter.textureType = UnityEditor.TextureImporterType.Advanced;
-            //使用透明度
-            textureImporter.alphaIsTransparency = true;
-            textureImporter.isReadable = true;
-            textureImporter.filterMode = (UnityEngine.FilterMode)tex.FilterMode;
-            textureImporter.wrapMode = (UnityEngine.TextureWrapMode)tex.WrapMode;
-            textureImporter.mipmapEnabled = tex.MipMode > 0;
-            UnityEditor.AssetDatabase.ImportAsset(fileName);
-        }
-        UnityEditor.AssetDatabase.Refresh();
-    }
-
-
-    /// <summary>
-    /// 通过文件名和数据来保存文件
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="data"></param>
-    private void SaveFile(string fileName, byte[] data)
-    {
-        if (File.Exists(fileName))
-        {
-            File.Delete(fileName);
-        }
-        File.WriteAllBytes(fileName, data);
-    }
+    
 
     private void loadDataChunk(BinaryReader binReader)
     {
@@ -239,13 +209,14 @@ public class Uf3dLoader
         //string jsonObject = ReadUtil.ReadUTF(data.Bytes);
     }
 
-    private void ReadParticleSystem(string name, int layer, Matrix4x4 matrix, ReadChunk data, int parent)
+    private void ReadParticleSystem(string name, int layer, Matrix4x4 matrix, ReadChunk data, int parent, int chunkId)
     {
         int texId = data.Bytes.ReadUInt16();
         uint surfId = data.Bytes.ReadUInt16();
         string jsonStr = ReadUtil.ReadUTF(data.Bytes);
         JObject jsonObject = JObject.Parse(jsonStr);
         ParticleSystem ps = new ParticleSystem();
+        ps.ChunkId = chunkId;
         ps.Name = name;
         ps.Layer = layer;
         ps.Matrix = matrix;
@@ -254,7 +225,7 @@ public class Uf3dLoader
         ps.Parent = parent;
         ps.deserialize(jsonObject);
         particleSystemList.Add(ps);
-        System.Diagnostics.Debug.WriteLine("粒子名字:{0}", name);
+        //System.Diagnostics.Debug.WriteLine("粒子名字:{0}", name);
     }
 
     private UnityEngine.Matrix4x4 ReadMatrix3D(BinaryReader input, int compression = 0)
@@ -353,11 +324,11 @@ public class Uf3dLoader
         int parent = chunk.Bytes.ReadInt16();
         float frameSpeed = chunk.Bytes.ReadSingle();
 
-        if (parent != -1)
-        {
-            matrix = cascadeTransform[parent] * matrix;
-        }
-        cascadeTransform[chunk.Id] = matrix;
+        //if (parent != -1)
+        //{
+        //    matrix = cascadeTransform[parent] * matrix;
+        //}
+        //cascadeTransform[chunk.Id] = matrix;
 
         while (chunk.BytesAvailable() > 0)
         {
@@ -365,7 +336,7 @@ public class Uf3dLoader
             switch (data.Name)
             {
                 case "particleSysterm":
-                    ReadParticleSystem(name, layer, matrix, data, parent);
+                    ReadParticleSystem(name, layer, matrix, data, parent, chunk.Id);
                     break;
                 case "extends":
                     ReadExtends(data);

@@ -24,7 +24,7 @@ public class SpriteSheetEffector : IEffector
         rows = (uint)data["rows"];
         columns = (uint)data["columns"];
         duration = (float)data["duration"];
-        count = (uint)data["count"];
+        count = data["count"] == null ? rows * columns : (uint)data["count"];
         randomFrame = (bool)data["randomFrame"];
         lifeDuration = (bool)data["lifeDuration"];
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 public class ColorGradientValue : IColorValue
 {
@@ -51,6 +52,21 @@ public class ColorGradientValue : IColorValue
     }
 
     public uint getValue(float ratio)
+    {
+        throw new NotImplementedException();
+    }
+
+    uint IColorValue.getValue(float ratio)
+    {
+        throw new NotImplementedException();
+    }
+
+    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
+    {
+        throw new NotImplementedException();
+    }
+
+    void IDeserialize.deserialize(JObject data)
     {
         throw new NotImplementedException();
     }

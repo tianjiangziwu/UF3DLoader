@@ -43,8 +43,6 @@ public class Texture3D
     private string name = string.Empty;
     private bool isATF = false;
 
-    private string unityAssetsPath = string.Empty;
-
     public bool OptimizeForRenderToTexture
     {
         get
@@ -180,19 +178,6 @@ public class Texture3D
         set
         {
             isATF = value;
-        }
-    }
-
-    public string UnityAssetsPath
-    {
-        get
-        {
-            return unityAssetsPath;
-        }
-
-        set
-        {
-            unityAssetsPath = value;
         }
     }
 

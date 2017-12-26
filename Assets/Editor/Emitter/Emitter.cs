@@ -32,7 +32,20 @@ public class Emitter : IDeserialize
     //
     public bool directionByShape;
     // YZ的缩放是否与X保持一致
-    public bool uniformScale_;
+    private bool _uniformScale;
+
+    public bool UniformScale
+    {
+        get
+        {
+            return _uniformScale;
+        }
+
+        set
+        {
+            _uniformScale = value;
+        }
+    }
 
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
@@ -56,7 +69,7 @@ public class Emitter : IDeserialize
         Newtonsoft.Json.Linq.JObject dict = data[v] as Newtonsoft.Json.Linq.JObject;
         string classType = (string)dict["type"];
         classType = classType.Substring(classType.IndexOf("::") + 2);
-        UnityEngine.Debug.LogFormat("classType{0}", classType);
+        //UnityEngine.Debug.LogFormat("classType{0}", classType);
         System.Type ct = System.Type.GetType(classType, true);
         IDeserialize o = (IDeserialize)Activator.CreateInstance(ct);
         //需要用到反射，但是private数据会获取不到，所以改成public

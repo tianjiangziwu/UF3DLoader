@@ -8,6 +8,7 @@ using Newtonsoft;
 
 public class ParticleSystem
 {
+    private int chunkId = -1;
     private string type = string.Empty;
     private string name = string.Empty;
     private int layer = 0;
@@ -19,6 +20,15 @@ public class ParticleSystem
 
     //粒子发射器
     private Emitter emitter = null;
+
+    /// <summary>
+    /// 所有的影响器
+    /// </summary>
+    private List<IEffector> effectors = null;
+
+    private RenderParam renderParam = new RenderParam();
+
+    private UnityResource unityResourceParam = new UnityResource(); 
 
     public string Type
     {
@@ -126,6 +136,58 @@ public class ParticleSystem
         }
     }
 
+    public RenderParam RenderParam
+    {
+        get
+        {
+            return renderParam;
+        }
+
+        set
+        {
+            renderParam = value;
+        }
+    }
+
+    public UnityResource UnityResourceParam
+    {
+        get
+        {
+            return unityResourceParam;
+        }
+
+        set
+        {
+            unityResourceParam = value;
+        }
+    }
+
+    public int ChunkId
+    {
+        get
+        {
+            return chunkId;
+        }
+
+        set
+        {
+            chunkId = value;
+        }
+    }
+
+    public Emitter Emitter
+    {
+        get
+        {
+            return emitter;
+        }
+
+        set
+        {
+            emitter = value;
+        }
+    }
+
     public ParticleSystem()
     {
         emitter = new Emitter();
@@ -138,5 +200,39 @@ public class ParticleSystem
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
         emitter.deserialize(data["emitter"] as Newtonsoft.Json.Linq.JObject);
+
+        effectors = new List<IEffector>();
+
+        foreach(Newtonsoft.Json.Linq.JObject effect in data["effectors"])
+        {
+            string classType = (string)effect["type"];
+            classType = classType.Substring(classType.IndexOf("::") + 2);
+            //UnityEngine.Debug.LogFormat("classType{0}", classType);
+            System.Type ct = System.Type.GetType(classType, true);
+            IEffector o = (IEffector)Activator.CreateInstance(ct);
+            o.deserialize(effect);
+            effectors.Add(o);
+        }
+
+        renderParam.ParticleNumber = (int)data["number"];
+        emitter.UniformScale = (bool)data["uniformScale"];
+        renderParam.BlendMode = (int)data["blendMode"];
+        renderParam.DepthWrite = (bool)data["depthWrite"];
+        renderParam.Loop = (bool)data["loop"];
+        renderParam.RotateAxis = (int)data["rotateAxis"];
+        renderParam.BillboardType = (int)data["orient"];
+        renderParam.IsWorldParticle = (bool)data["isWorldParticle"];
+        renderParam.RotateSurface = data["rotateSurface"] == null ? false : (bool)data["rotateSurface"];
+        renderParam.RandomOnBorn = (bool)data["randomOnBorn"];
+        renderParam.Decal = (bool)data["decal"];
+        renderParam.Prewarm = data["prewarm"] == null ? 0 : (float)data["prewarm"];
+        renderParam.InfiniteBounds = (bool)data["infiniteBounds"];
+        if (!renderParam.InfiniteBounds)
+        {
+            var bound = StringUtil.SplitString<float>((string)data["boundMin"], new char[] { ',' });
+            renderParam.BoundMin = new Vector3(bound[0], bound[1], bound[2]);
+            bound = StringUtil.SplitString<float>((string)data["boundMax"], new char[] { ',' });
+            renderParam.BoundMax = new Vector3(bound[0], bound[1], bound[2]);
+        }
     }
 }
