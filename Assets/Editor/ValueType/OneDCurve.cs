@@ -40,25 +40,14 @@ public class OneDCurve : IOneDValue
         throw new NotImplementedException();
     }
 
-    void IDeserialize.deserialize(JObject data)
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
-        throw new NotImplementedException();
-    }
-
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve();
-        //ret.
+        var curve = new AnimationCurve();
+        foreach (CurveAnchor point in anchors)
+        {
+            curve.AddKey(point.Time, point.Value);
+        }
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, curve);  
         return ret;
-    }
-
-    float IOneDValue.getMaxValue()
-    {
-        throw new NotImplementedException();
-    }
-
-    float IOneDValue.getValue(float ratio)
-    {
-        throw new NotImplementedException();
     }
 }

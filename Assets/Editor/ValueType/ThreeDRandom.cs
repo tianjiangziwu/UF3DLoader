@@ -24,18 +24,9 @@ public class ThreeDRandom : IThreeDValue
         throw new NotImplementedException();
     }
 
-    Vector3 IThreeDValue.getValue(float ratio)
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
         throw new NotImplementedException();
     }
 
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
-    void IDeserialize.deserialize(JObject data)
-    {
-        throw new NotImplementedException();
-    }
 }

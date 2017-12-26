@@ -17,32 +17,17 @@ public class OneDConst : IOneDValue
         value = (float)data["value"];
     }
 
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
+    {
+        throw new NotImplementedException();
+    }
+
     public float getMaxValue()
     {
         throw new NotImplementedException();
     }
 
     public float getValue(float ratio)
-    {
-        throw new NotImplementedException();
-    }
-
-    void IDeserialize.deserialize(JObject data)
-    {
-        throw new NotImplementedException();
-    }
-
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        return new UnityEngine.ParticleSystem.MinMaxCurve(value);
-    }
-
-    float IOneDValue.getMaxValue()
-    {
-        throw new NotImplementedException();
-    }
-
-    float IOneDValue.getValue(float ratio)
     {
         throw new NotImplementedException();
     }

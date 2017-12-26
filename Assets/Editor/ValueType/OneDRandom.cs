@@ -26,23 +26,9 @@ public class OneDRandom : IOneDValue
         throw new NotImplementedException();
     }
 
-    float IOneDValue.getValue(float ratio)
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
-        throw new NotImplementedException();
-    }
-
-    float IOneDValue.getMaxValue()
-    {
-        throw new NotImplementedException();
-    }
-
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
-    void IDeserialize.deserialize(JObject data)
-    {
-        throw new NotImplementedException();
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(min, max);
+        return ret;
     }
 }

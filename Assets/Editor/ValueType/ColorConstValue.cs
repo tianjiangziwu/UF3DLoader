@@ -27,23 +27,14 @@ public class ColorConstValue : IColorValue
         value = (uint)data["value"];
     }
 
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
+    {
+        throw new NotImplementedException();
+    }
+
     public uint getValue(float ratio)
     {
         throw new NotImplementedException();
     }
 
-    void IDeserialize.deserialize(JObject data)
-    {
-        throw new NotImplementedException();
-    }
-
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
-    uint IColorValue.getValue(float ratio)
-    {
-        throw new NotImplementedException();
-    }
 }

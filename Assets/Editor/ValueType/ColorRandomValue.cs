@@ -42,22 +42,12 @@ public class ColorRandomValue : IColorValue
         color1 = (uint)data["color1"];
     }
 
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
+    {
+        throw new NotImplementedException();
+    }
+
     public uint getValue(float ratio)
-    {
-        throw new NotImplementedException();
-    }
-
-    void IDeserialize.deserialize(JObject data)
-    {
-        throw new NotImplementedException();
-    }
-
-    UnityEngine.ParticleSystem.MinMaxCurve IValue.getCurve()
-    {
-        throw new NotImplementedException();
-    }
-
-    uint IColorValue.getValue(float ratio)
     {
         throw new NotImplementedException();
     }

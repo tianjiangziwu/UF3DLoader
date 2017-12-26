@@ -120,7 +120,7 @@ public class ParticleSystemAssembler
             main.startRotation3D = false;
         }
 
-        //main.startLifetime = new 
+        main.startLifetime = ps.Emitter.lifeTime.getCurve(); 
     }
 
     private static void FillRenderModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
