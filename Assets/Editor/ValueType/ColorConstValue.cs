@@ -27,6 +27,11 @@ public class ColorConstValue : IColorValue
         value = (uint)data["value"];
     }
 
+    public UnityEngine.ParticleSystem.MinMaxGradient getGradient()
+    {
+        return new UnityEngine.ParticleSystem.MinMaxGradient(ValueTypeUtil.GetColor(value));
+    }
+
     public uint getValue(float ratio)
     {
         throw new NotImplementedException();

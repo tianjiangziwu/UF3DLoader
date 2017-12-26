@@ -56,4 +56,8 @@ public class ColorGradientValue : IColorValue
         throw new NotImplementedException();
     }
 
+    public UnityEngine.ParticleSystem.MinMaxGradient getGradient()
+    {
+        return new UnityEngine.ParticleSystem.MinMaxGradient(ValueTypeUtil.GenerateConstGradient(colors.ToArray(), colorRatios.ToArray()));
+    }
 }

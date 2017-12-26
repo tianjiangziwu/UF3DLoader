@@ -42,6 +42,11 @@ public class ColorRandomValue : IColorValue
         color1 = (uint)data["color1"];
     }
 
+    public UnityEngine.ParticleSystem.MinMaxGradient getGradient()
+    {
+        return new UnityEngine.ParticleSystem.MinMaxGradient(ValueTypeUtil.GetColor(color0), ValueTypeUtil.GetColor(color1));
+    }
+
     public uint getValue(float ratio)
     {
         throw new NotImplementedException();
