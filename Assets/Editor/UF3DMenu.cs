@@ -23,7 +23,7 @@ public class UF3DMenu
         //    loader.parse(SceneFileCopy.SourceFile);
         //}
         Uf3dLoader loader = new Uf3dLoader();
-        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\smoke2.uf3d");
+        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\smoke.uf3d");
         
     }
 

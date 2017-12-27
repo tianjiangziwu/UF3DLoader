@@ -17,12 +17,77 @@ public class ConeShape : IShape
     // 半径
     private float radius;
 
+    public bool Shell
+    {
+        get
+        {
+            return shell;
+        }
+
+        set
+        {
+            shell = value;
+        }
+    }
+
+    public bool Volum
+    {
+        get
+        {
+            return volum;
+        }
+
+        set
+        {
+            volum = value;
+        }
+    }
+
+    public float Angle
+    {
+        get
+        {
+            return angle;
+        }
+
+        set
+        {
+            angle = value;
+        }
+    }
+
+    public float Length
+    {
+        get
+        {
+            return length;
+        }
+
+        set
+        {
+            length = value;
+        }
+    }
+
+    public float Radius
+    {
+        get
+        {
+            return radius;
+        }
+
+        set
+        {
+            radius = value;
+        }
+    }
+
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
-        shell = (bool)data["shell"];
-        volum = (bool)data["volum"];
-        angle = (float)data["angle"];
-        length = (float)data["length"];
-        radius = (float)data["radius"];
+        Shell = (bool)data["shell"];
+        Volum = (bool)data["volum"];
+        Angle = (float)data["angle"];
+        Length = (float)data["length"];
+        Radius = (float)data["radius"];
     }
 }

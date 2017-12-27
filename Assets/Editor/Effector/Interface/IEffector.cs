@@ -5,5 +5,5 @@ using System.Text;
 
 public interface IEffector:IDeserialize
 {
-
+    
 }

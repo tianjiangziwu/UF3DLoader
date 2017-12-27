@@ -188,6 +188,19 @@ public class ParticleSystem
         }
     }
 
+    public List<IEffector> Effectors
+    {
+        get
+        {
+            return effectors;
+        }
+
+        set
+        {
+            effectors = value;
+        }
+    }
+
     public ParticleSystem()
     {
         emitter = new Emitter();
@@ -201,7 +214,7 @@ public class ParticleSystem
     {
         emitter.deserialize(data["emitter"] as Newtonsoft.Json.Linq.JObject);
 
-        effectors = new List<IEffector>();
+        Effectors = new List<IEffector>();
 
         foreach(Newtonsoft.Json.Linq.JObject effect in data["effectors"])
         {
@@ -211,7 +224,7 @@ public class ParticleSystem
             System.Type ct = System.Type.GetType(classType, true);
             IEffector o = (IEffector)Activator.CreateInstance(ct);
             o.deserialize(effect);
-            effectors.Add(o);
+            Effectors.Add(o);
         }
 
         renderParam.ParticleNumber = (int)data["number"];

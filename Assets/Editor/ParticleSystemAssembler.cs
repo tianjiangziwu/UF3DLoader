@@ -51,9 +51,69 @@ public class ParticleSystemAssembler
             FillMainModule(ups, ps);
             FillEmissionModule(ups, ps);
             FillShapeModule(ups, ps);
+            FillVelocityOverLifetimeModule(ups, ps);
+            FillRotationOverTimeModule(ups, ps);
             FillRenderModule(ups, ps);
-            
+
+            FillEffector(ups, ps);
             particles.Add(ps.ChunkId, unityParticleSystem);
+        }
+    }
+
+    private static void FillEffector(UnityEngine.ParticleSystem ups, ParticleSystem ps)
+    {
+        foreach(var effect in ps.Effectors)
+        {
+
+        }
+    }
+
+    private static void FillVelocityOverLifetimeModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
+    {
+        var velocity = ups.velocityOverLifetime;
+        if (ps.Emitter.directionByShape)
+        {
+            velocity.enabled = false;
+            return;
+        }
+        velocity.enabled = true;
+        var direction = ps.Emitter.direction.getThreeDCurve();
+        if (ps.Emitter.direction is ThreeDConst || ps.Emitter.direction is ThreeDRandom || ps.Emitter.direction is ThreeDCurve)
+        {
+            velocity.space = ParticleSystemSimulationSpace.Local;
+            velocity.x = direction[0];
+            velocity.y = direction[1];
+            velocity.z = direction[2];
+        }
+        else
+        {
+            UnityEngine.Debug.LogFormat("{0}暂时未支持的类型", ps.Emitter.direction.ToString());
+        }
+    }
+
+    private static void FillRotationOverTimeModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
+    {
+        var module = ups.rotationOverLifetime;
+        module.enabled = true;
+        module.separateAxes = true;
+        //旋转轴向
+        if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
+        {
+            module.x = ps.Emitter.rotVelocity.getCurve();
+            module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+        }
+        else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Y)
+        {
+            module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.y = ps.Emitter.rotVelocity.getCurve();
+            module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+        }
+        else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Z)
+        {
+            module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.z = ps.Emitter.rotVelocity.getCurve();
         }
     }
 
@@ -65,13 +125,57 @@ public class ParticleSystemAssembler
     private static void FillShapeModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
         var shape = ups.shape;
-        shape.alignToDirection = ps.Emitter.directionByShape;
+
+        //三维球向放到这边来处理
+        if (!ps.Emitter.directionByShape && ps.Emitter.direction is ThreeDSphere)
+        {
+            var asSphereShape = ps.Emitter.direction as ThreeDSphere;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.radius = asSphereShape.OuterRadius;
+            return;
+        }
+
+        if (!ps.Emitter.directionByShape)
+        {
+            shape.enabled = false;
+            return;
+        }
+        
         if (ps.Emitter.shape is BoxShape)
         {
             var asBoxShape = ps.Emitter.shape as BoxShape;
             shape.shapeType = ParticleSystemShapeType.Box;
             shape.box = asBoxShape.getScale();
+        }
+        else if (ps.Emitter.shape is SphereShape)
+        {
+            var asSphereShape = ps.Emitter.shape as SphereShape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.radius = asSphereShape.RadiusBig;
+        }
+        else if (ps.Emitter.shape is CylinderShape)
+        {
+            var asCylinderShape = ps.Emitter.shape as CylinderShape;
+            shape.shapeType = ParticleSystemShapeType.ConeVolume;
+            shape.angle = 0.0f;
+            shape.radius = asCylinderShape.RadiusBig;
+            shape.length = asCylinderShape.Height;
+        }
+        else if (ps.Emitter.shape is ConeShape)
+        {
+            var asConeShape = ps.Emitter.shape as ConeShape;
+            if (asConeShape.Shell)
+            {
+                shape.shapeType = ParticleSystemShapeType.ConeShell;
+            }
+            else
+            {
+                shape.shapeType = ParticleSystemShapeType.ConeVolume;
+            }
             
+            shape.angle = asConeShape.Angle;
+            shape.radius = asConeShape.Radius;
+            shape.length = asConeShape.Length;
         }
     }
 
@@ -92,15 +196,15 @@ public class ParticleSystemAssembler
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
             main.startRotation3D = true;
-            main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(-180.0f, 180.0f);
-            main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            main.startRotationX = ps.Emitter.rot.getCurve();
+            main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
         }
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Y)
         {
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(-180.0f, 180.0f);
+            main.startRotationY = ps.Emitter.rot.getCurve();
             main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
         }
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Z)
@@ -108,7 +212,7 @@ public class ParticleSystemAssembler
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
             main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(-180.0f, 180.0f); 
+            main.startRotationZ = ps.Emitter.rot.getCurve();
         }
         else
         {
@@ -130,6 +234,8 @@ public class ParticleSystemAssembler
         }
 
         main.startLifetime = ps.Emitter.lifeTime.getCurve();
+        main.startSpeed = ps.Emitter.velocity.getCurve();
+
         main.startColor = ps.Emitter.color.getGradient();
         var alpha = ps.Emitter.alpha.getCurve();
         main.startColor = MergeColorAndAlpha(main.startColor, alpha);

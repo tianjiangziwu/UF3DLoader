@@ -12,6 +12,45 @@ public class CylinderShape : IShape
     // 高
     private float height;
 
+    public float RadiusSmall
+    {
+        get
+        {
+            return radiusSmall;
+        }
+
+        set
+        {
+            radiusSmall = value;
+        }
+    }
+
+    public float RadiusBig
+    {
+        get
+        {
+            return radiusBig;
+        }
+
+        set
+        {
+            radiusBig = value;
+        }
+    }
+
+    public float Height
+    {
+        get
+        {
+            return height;
+        }
+
+        set
+        {
+            height = value;
+        }
+    }
+
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
         radiusBig = (float)data["radiusBig"];
