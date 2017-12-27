@@ -30,6 +30,6 @@ public class OneDConst : IOneDValue
 
     public float getValue(float ratio)
     {
-        throw new NotImplementedException();
+        return value;
     }
 }

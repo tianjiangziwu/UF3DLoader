@@ -35,11 +35,6 @@ public class ParticleSystemAssembler
             
             TransformUtil.SetTransformFromMatrix(unityParticleSystem.transform, ref matrix);
 
-            if (ps.Emitter.UniformScale)
-            {
-                unityParticleSystem.transform.localScale = new Vector3(unityParticleSystem.transform.localScale.x, unityParticleSystem.transform.localScale.x, unityParticleSystem.transform.localScale.x);
-            }
-
             UnityEngine.ParticleSystem ups = unityParticleSystem.GetComponent<UnityEngine.ParticleSystem>();
 
             //StreamWriter sw = new StreamWriter("D:\\ps.txt", false, Encoding.UTF8);
@@ -119,8 +114,83 @@ public class ParticleSystemAssembler
         {
             main.startRotation3D = false;
         }
+
+        main.startSize3D = true;
+        if (ps.Emitter.UniformScale)
+        {
+            main.startSizeX = ps.Emitter.sizeX.getCurve();
+            main.startSizeY = main.startSizeX;
+            main.startSizeZ = main.startSizeX;
+        }
+        else
+        {
+            main.startSizeX = ps.Emitter.sizeX.getCurve();
+            main.startSizeY = ps.Emitter.sizeY.getCurve();
+            main.startSizeZ = ps.Emitter.sizeZ.getCurve();
+        }
+
         main.startLifetime = ps.Emitter.lifeTime.getCurve();
         main.startColor = ps.Emitter.color.getGradient();
+        var alpha = ps.Emitter.alpha.getCurve();
+        main.startColor = MergeColorAndAlpha(main.startColor, alpha);
+
+    }
+
+    private static UnityEngine.ParticleSystem.MinMaxGradient MergeColorAndAlpha(UnityEngine.ParticleSystem.MinMaxGradient startColor, UnityEngine.ParticleSystem.MinMaxCurve alpha)
+    {
+        UnityEngine.ParticleSystem.MinMaxGradient ret = startColor;
+        if (startColor.mode == ParticleSystemGradientMode.Color && alpha.mode == ParticleSystemCurveMode.Constant)
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(new Color(startColor.color.r, startColor.color.g, startColor.color.b, alpha.constant));
+        }
+        else if (startColor.mode == ParticleSystemGradientMode.Color && alpha.mode == ParticleSystemCurveMode.Curve)
+        {
+            var alphaKeys = new GradientAlphaKey[alpha.curve.length];
+            var colorKeys = new GradientColorKey[2];
+            colorKeys[0].time = 0.0f;
+            colorKeys[1].time = 1.0f;
+            colorKeys[0].color = startColor.color;
+            colorKeys[1].color = startColor.color;
+            for (int i = 0; i < alphaKeys.Length; ++i)
+            {
+                alphaKeys[i].time = alpha.curve.keys[i].time;
+                alphaKeys[i].alpha = alpha.curve.keys[i].value;
+            }
+            var gradient = new Gradient();
+            gradient.alphaKeys = alphaKeys;
+            gradient.colorKeys = colorKeys;
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(gradient);
+        }
+        else if (startColor.mode == ParticleSystemGradientMode.Gradient && alpha.mode == ParticleSystemCurveMode.Constant)
+        {
+            var alphaKeys = startColor.gradient.alphaKeys;
+            for (int i = 0; i < alphaKeys.Length; ++i)
+            {
+                alphaKeys[i].alpha = alpha.constant;
+            }
+            var gradient = new Gradient();
+            gradient.alphaKeys = alphaKeys;
+            gradient.colorKeys = startColor.gradient.colorKeys;
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(gradient);
+        }
+        else if (startColor.mode == ParticleSystemGradientMode.Gradient && alpha.mode == ParticleSystemCurveMode.Curve)
+        {
+            var alphaKeys = new GradientAlphaKey[alpha.curve.length];
+            for (int i = 0; i < alphaKeys.Length; ++i)
+            {
+                alphaKeys[i].time = alpha.curve.keys[i].time;
+                alphaKeys[i].alpha = alpha.curve.keys[i].value;
+            }
+            var gradient = new Gradient();
+            gradient.alphaKeys = alphaKeys;
+            gradient.colorKeys = startColor.gradient.colorKeys;
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(gradient);
+        }
+        else
+        {
+            Debug.LogFormat("ParticleSystemGradientMode:{0},ParticleSystemCurveMode:{1}颜色和Alpha通道的合并未实现", startColor.mode, alpha.mode);
+        }
+        return ret;
     }
 
     private static void FillRenderModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)

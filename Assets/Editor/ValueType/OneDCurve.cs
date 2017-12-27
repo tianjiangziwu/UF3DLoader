@@ -35,9 +35,19 @@ public class OneDCurve : IOneDValue
         throw new NotImplementedException();
     }
 
-    public float getValue(float ratio)
+    public float getValue(float percent)
     {
-        throw new NotImplementedException();
+        float ret = 0;
+        int i = 0;
+        for (i = 0; i < anchors.Count - 1; i++)
+			{
+            if (anchors[i + 1].Time > percent)
+            {
+                ret = anchors[i].interpolate(anchors[i + 1], percent, curveType);
+                break;
+            }
+        }
+        return ret;
     }
 
     public UnityEngine.ParticleSystem.MinMaxCurve getCurve()

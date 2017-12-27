@@ -23,7 +23,7 @@ public class OneDRandom : IOneDValue
 
     public float getValue(float ratio)
     {
-        throw new NotImplementedException();
+        return min + (max - min) * UnityEngine.Random.Range(0.0f, 1.0f);
     }
 
     public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
