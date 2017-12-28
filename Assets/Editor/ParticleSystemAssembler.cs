@@ -102,6 +102,7 @@ public class ParticleSystemAssembler
         var module = ups.rotationOverLifetime;
         module.enabled = true;
         module.separateAxes = true;
+        bool exchange = (ParticleSystemRenderMode.Mesh == (ParticleSystemRenderMode)ps.RenderParam.BillboardType);
         //旋转轴向
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
@@ -112,15 +113,32 @@ public class ParticleSystemAssembler
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Y)
         {
             module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.z = ps.Emitter.rotVelocity.getCurve();
+            if (exchange)
+            {
+                module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+                module.z = ps.Emitter.rotVelocity.getCurve();
+            }
+            else
+            {
+                module.y = ps.Emitter.rotVelocity.getCurve();
+                module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            }
+            
         }
         //z轴是-y
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Z)
         {
             module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.y = ps.Emitter.rotVelocity.getNegativeCurve(); 
-            module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            if (exchange)
+            {
+                module.y = ps.Emitter.rotVelocity.getNegativeCurve();
+                module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            }
+            else
+            {
+                module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+                module.z = ps.Emitter.rotVelocity.getCurve();
+            }
         }
     }
 
@@ -239,7 +257,7 @@ public class ParticleSystemAssembler
             else
             {
                 main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-                main.startRotationZ = ps.Emitter.rot.getNegativeCurve();
+                main.startRotationZ = ps.Emitter.rot.getCurve();
             }
 
         }
