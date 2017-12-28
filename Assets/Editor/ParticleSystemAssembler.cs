@@ -64,7 +64,7 @@ public class ParticleSystemAssembler
     {
         foreach(var effect in ps.Effectors)
         {
-
+            effect.ApplyToUnityParticleSystem(ups, ps);
         }
     }
 
@@ -301,9 +301,21 @@ public class ParticleSystemAssembler
 
     private static void FillRenderModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
+        
         ParticleSystemRenderer psr = ups.GetComponent<ParticleSystemRenderer>();
         psr.sortingOrder = ps.Layer;
         psr.renderMode = (ParticleSystemRenderMode)ps.RenderParam.BillboardType;
+        if (psr.renderMode == ParticleSystemRenderMode.Mesh)
+        {
+            if (ps.SurfId != 0)
+            {
+                psr.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
+            }
+            else
+            {
+                psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad);
+            }
+        }
         psr.material = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MaterialPath, typeof(Material)) as Material;
 
     }

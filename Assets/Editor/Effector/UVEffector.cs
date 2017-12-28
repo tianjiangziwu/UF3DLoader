@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 public class UVEffector : IEffector
 {
@@ -41,5 +42,10 @@ public class UVEffector : IEffector
         keyFrameLifeTime.Insert(i, ratio);
         u.Insert(i, uVal);
         v.Insert(i, vVal);
+    }
+
+    public void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -26,6 +26,7 @@ public class ThreeDConst : IThreeDValue
 
     public Vector3 getValue(float ratio)
     {
-        throw new NotImplementedException();
+        var tdc = getThreeDCurve();
+        return new Vector3(tdc[0].Evaluate(ratio), tdc[1].Evaluate(ratio), tdc[2].Evaluate(ratio));
     }
 }

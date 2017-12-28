@@ -55,9 +55,14 @@ public class ThreeDCylinder : IThreeDValue
 
     public Vector3 getValue(float ratio)
     {
-        throw new NotImplementedException();
+        var tdc = getThreeDCurve();
+        return new Vector3(tdc[0].Evaluate(ratio), tdc[1].Evaluate(ratio), tdc[2].Evaluate(ratio));
     }
 
+    /// <summary>
+    /// 未实现
+    /// </summary>
+    /// <returns></returns>
     public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
     {
         var result = new Vector3();

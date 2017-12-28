@@ -51,9 +51,9 @@ public class ColorGradientValue : IColorValue
         }
     }
 
-    public uint getValue(float ratio)
+    public UnityEngine.Color getValue(float ratio)
     {
-        throw new NotImplementedException();
+        return getGradient().Evaluate(ratio);
     }
 
     public UnityEngine.ParticleSystem.MinMaxGradient getGradient()

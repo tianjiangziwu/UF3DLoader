@@ -61,11 +61,12 @@ public class ThreeDSphere : IThreeDValue
 
     public Vector3 getValue(float ratio)
     {
-        throw new NotImplementedException();
+        var tdc = getThreeDCurve();
+        return new Vector3(tdc[0].Evaluate(ratio), tdc[1].Evaluate(ratio), tdc[2].Evaluate(ratio));
     }
 
     /// <summary>
-    /// 实现由问题，不是随机
+    /// 实现有问题，不是随机，返回了固定值
     /// </summary>
     /// <returns></returns>
     public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()

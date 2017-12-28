@@ -50,8 +50,8 @@ public class ColorRandomBetweenValue : IColorValue
 
     
 
-    public uint getValue(float ratio)
+    public UnityEngine.Color getValue(float ratio)
     {
-        throw new NotImplementedException();
+        return getGradient().Evaluate(ratio);
     }
 }

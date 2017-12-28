@@ -5,5 +5,5 @@ using System.Text;
 
 public interface IEffector:IDeserialize
 {
-    
+    void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps);
 }

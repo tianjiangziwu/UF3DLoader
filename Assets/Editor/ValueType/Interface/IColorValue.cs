@@ -5,6 +5,6 @@ using System.Text;
 
 public interface IColorValue : IValue
 {
-    uint getValue(float ratio);
+    UnityEngine.Color getValue(float ratio);
     UnityEngine.ParticleSystem.MinMaxGradient getGradient();
 }
