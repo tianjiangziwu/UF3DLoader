@@ -11,31 +11,56 @@ public static class PrimitiveHelper
 
         GameObject gameObject = new GameObject(type.ToString());
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-        meshFilter.sharedMesh = PrimitiveHelper.GetPrimitiveMesh(type);
+        meshFilter.sharedMesh = PrimitiveHelper.GetPrimitiveMesh(type, true);
         gameObject.AddComponent<MeshRenderer>();
 
         return gameObject;
     }
 
-    public static Mesh GetPrimitiveMesh(PrimitiveType type)
+    public static Mesh GetPrimitiveMesh(PrimitiveType type, bool rotate = false)
     {
         if (!PrimitiveHelper.primitiveMeshes.ContainsKey(type))
         {
-            PrimitiveHelper.CreatePrimitiveMesh(type);
+            PrimitiveHelper.CreatePrimitiveMesh(type, rotate);
         }
 
         return PrimitiveHelper.primitiveMeshes[type];
     }
 
-    private static Mesh CreatePrimitiveMesh(PrimitiveType type)
+    private static Mesh CreatePrimitiveMesh(PrimitiveType type, bool rotate = false)
     {
         GameObject gameObject = GameObject.CreatePrimitive(type);
         Mesh mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
+
+        if (rotate)
+        {
+            RotateMeshVertices(mesh, new Vector3(0, 0, 0), new Vector3(90, 0, 0));
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+        }
 
         PrimitiveHelper.primitiveMeshes[type] = mesh;
 
         GameObject.DestroyImmediate(gameObject);
         return mesh;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="mesh"></param>
+    /// <param name="center">any V3 you want as the pivot point.</param>
+    /// <param name="eulerAngles">the degrees the vertices are to be rotated, for example (0,90,0) </param>
+    public static void RotateMeshVertices(Mesh mesh, Vector3 center, Vector3 eulerAngles)
+    {
+        Quaternion newRotation = new Quaternion();
+        newRotation.eulerAngles = eulerAngles;//
+        Vector3[] verts = mesh.vertices;
+        for (int i = 0; i < verts.Length; i++)
+        {//vertices being the array of vertices of your mesh
+            verts[i] = newRotation * (verts[i] - center) + center;
+        }
+        mesh.vertices = verts;
     }
 
     private static Mesh BuildQuad(float width, float height)

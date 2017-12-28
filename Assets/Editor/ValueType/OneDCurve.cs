@@ -55,4 +55,10 @@ public class OneDCurve : IOneDValue
         var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(anchors));  
         return ret;
     }
+
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
+    {
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
+        return ret;
+    }
 }

@@ -23,7 +23,7 @@ public class ParticleSystemAssembler
             ParticleSystem ps = loader.ParticleSystemList[i];
             var tex2D = AssembleTexture(ps, loader.Resource);
             var mtl = AssembleMaterial(ps, loader.Resource);
-            var mesh = AssembleMesh(ps, loader.Resource);
+            var mesh = AssembleMesh(ps, loader.Resource, true);
             var unityParticleSystem = new GameObject(ps.Name);
             unityParticleSystem.AddComponent<UnityEngine.ParticleSystem>();
             if (ps.Parent != -1)
@@ -32,7 +32,11 @@ public class ParticleSystemAssembler
                 unityParticleSystem.transform.parent = father.transform;
             }
             var matrix = ps.Matrix;
-            
+            // 由于粒子发射器的朝向是+z轴，需要y轴朝上，绕x轴旋转-90度
+            var rotation1 = new Matrix4x4();
+            rotation1.SetTRS(new Vector3(0,0,0), Quaternion.Euler(-90, 0, 0), new Vector3(1, 1, 1));
+            matrix = ps.Matrix * rotation1;
+
             TransformUtil.SetTransformFromMatrix(unityParticleSystem.transform, ref matrix);
 
             UnityEngine.ParticleSystem ups = unityParticleSystem.GetComponent<UnityEngine.ParticleSystem>();
@@ -106,14 +110,15 @@ public class ParticleSystemAssembler
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Y)
         {
             module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.y = ps.Emitter.rotVelocity.getCurve();
-            module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
+            module.z = ps.Emitter.rotVelocity.getCurve();
         }
+        //z轴是-y
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Z)
         {
             module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-            module.z = ps.Emitter.rotVelocity.getCurve();
+            module.y = ps.Emitter.rotVelocity.getNegativeCurve(); 
+            module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
         }
     }
 
@@ -158,7 +163,7 @@ public class ParticleSystemAssembler
             var asCylinderShape = ps.Emitter.shape as CylinderShape;
             shape.shapeType = ParticleSystemShapeType.ConeVolume;
             shape.angle = 0.0f;
-            shape.radius = asCylinderShape.RadiusBig;
+            shape.radius = asCylinderShape.RadiusBig < 0.01f? 1.0f: asCylinderShape.RadiusBig;
             shape.length = asCylinderShape.Height;
         }
         else if (ps.Emitter.shape is ConeShape)
@@ -192,6 +197,7 @@ public class ParticleSystemAssembler
         main.simulationSpace = ps.RenderParam.IsWorldParticle ? ParticleSystemSimulationSpace.World : ParticleSystemSimulationSpace.Local;
         main.prewarm = ps.RenderParam.Prewarm > 0.0f ? true : false;
 
+		//初始的旋转是世界的方向，不用转换-_-
         //旋转轴向
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
@@ -200,10 +206,13 @@ public class ParticleSystemAssembler
             main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
         }
+        //绕y轴旋转，即z轴旋转
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Y)
         {
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            //main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            //main.startRotationZ = ps.Emitter.rot.getCurve();
             main.startRotationY = ps.Emitter.rot.getCurve();
             main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
         }
@@ -211,8 +220,10 @@ public class ParticleSystemAssembler
         {
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            //main.startRotationY = ps.Emitter.rot.getNegativeCurve();
+            //main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
             main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationZ = ps.Emitter.rot.getCurve();
+            main.startRotationZ = ps.Emitter.rot.getNegativeCurve();
         }
         else
         {
@@ -313,14 +324,21 @@ public class ParticleSystemAssembler
             }
             else
             {
-                psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad);
+                psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
             }
         }
         psr.material = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MaterialPath, typeof(Material)) as Material;
 
     }
 
-    private static Mesh AssembleMesh(ParticleSystem ps, Dictionary<int, object> resource)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ps"></param>
+    /// <param name="resource"></param>
+    /// <param name="rotate">是否旋转模型x轴90度</param>
+    /// <returns></returns>
+    private static Mesh AssembleMesh(ParticleSystem ps, Dictionary<int, object> resource, bool rotate = false)
     {
         Mesh mesh = null;
         if (ps.SurfId != 0)
@@ -362,6 +380,13 @@ public class ParticleSystemAssembler
             mesh.uv = uv1;
             mesh.triangles = triangles;
             mesh.RecalculateNormals();
+
+            if (rotate)
+            {
+                PrimitiveHelper.RotateMeshVertices(mesh, new Vector3(0,0,0), new Vector3(90,0,0));
+                mesh.RecalculateBounds();
+                mesh.RecalculateNormals();
+            }
 
             UnityEditor.AssetDatabase.CreateAsset(mesh, ps.UnityResourceParam.MeshPath);
             UnityEditor.AssetDatabase.Refresh();

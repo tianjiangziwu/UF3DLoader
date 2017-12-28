@@ -31,4 +31,10 @@ public class OneDRandom : IOneDValue
         var ret = new UnityEngine.ParticleSystem.MinMaxCurve(min, max);
         return ret;
     }
+
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
+    {
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(-max, -min);
+        return ret;
+    }
 }

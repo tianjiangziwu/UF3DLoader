@@ -28,6 +28,12 @@ public class OneDConst : IOneDValue
         throw new NotImplementedException();
     }
 
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
+    {
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(-value);
+        return ret;
+    }
+
     public float getValue(float ratio)
     {
         return value;

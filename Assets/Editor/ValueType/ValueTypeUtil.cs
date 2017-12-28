@@ -31,12 +31,12 @@ public class ValueTypeUtil
         return gradient;
     }
 
-    public static UnityEngine.AnimationCurve GenerateAnimationCurve(List<CurveAnchor> anchors)
+    public static UnityEngine.AnimationCurve GenerateAnimationCurve(List<CurveAnchor> anchors, bool negative = false)
     {
         var curve = new UnityEngine.AnimationCurve();
         foreach (CurveAnchor point in anchors)
         {
-            curve.AddKey(point.Time, point.Value);
+            curve.AddKey(point.Time, point.Value * (negative ? -1.0f:1.0f));
         }
         return curve;
     }

@@ -6,9 +6,9 @@ using System.Text;
 public class CylinderShape : IShape
 {
     // 内径
-    private float radiusSmall;
+    private float radiusSmall = 0.0f;
     // 外径
-    private float radiusBig;
+    private float radiusBig = 1.0f;
     // 高
     private float height;
 

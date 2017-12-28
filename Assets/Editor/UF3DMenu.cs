@@ -23,9 +23,8 @@ public class UF3DMenu
         //    loader.parse(SceneFileCopy.SourceFile);
         //}
         Uf3dLoader loader = new Uf3dLoader();
-        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\xuanfeng0.uf3d");
-        
-    }
+        string[] names = new string[] { "smoke", "xuanfeng0" };
+        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\" + names[1] + ".uf3d");
 
-   
+    }
 }
