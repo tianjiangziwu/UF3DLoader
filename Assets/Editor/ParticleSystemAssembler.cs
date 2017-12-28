@@ -26,11 +26,13 @@ public class ParticleSystemAssembler
             var mesh = AssembleMesh(ps, loader.Resource, true);
             var unityParticleSystem = new GameObject(ps.Name);
             unityParticleSystem.AddComponent<UnityEngine.ParticleSystem>();
-            if (ps.Parent != -1)
-            {
-                var father = particles[ps.Parent];
-                unityParticleSystem.transform.parent = father.transform;
-            }
+            
+            //if (ps.Parent != -1)
+            //{
+            //    var father = particles[ps.Parent];
+            //    unityParticleSystem.transform.parent = father.transform;
+            //}
+
             var matrix = ps.Matrix;
             // 由于粒子发射器的朝向是+z轴，需要y轴朝上，绕x轴旋转-90度
             var rotation1 = new Matrix4x4();
@@ -197,7 +199,9 @@ public class ParticleSystemAssembler
         main.simulationSpace = ps.RenderParam.IsWorldParticle ? ParticleSystemSimulationSpace.World : ParticleSystemSimulationSpace.Local;
         main.prewarm = ps.RenderParam.Prewarm > 0.0f ? true : false;
 
-		//初始的旋转是世界的方向，不用转换-_-
+        //自带mesh和原来的mesh不一样，这是世界的旋转
+        //如果不是ParticleSystemRenderMode.Mesh模式，quad是法线是+y轴的，发色器-90度后，quad法线朝向-z轴
+        bool exchange = (ParticleSystemRenderMode.Mesh == (ParticleSystemRenderMode)ps.RenderParam.BillboardType);
         //旋转轴向
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
@@ -211,19 +215,33 @@ public class ParticleSystemAssembler
         {
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            //main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            //main.startRotationZ = ps.Emitter.rot.getCurve();
-            main.startRotationY = ps.Emitter.rot.getCurve();
-            main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            if (exchange)
+            {
+                main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+                main.startRotationZ = ps.Emitter.rot.getCurve();
+            }
+            else
+            {
+                main.startRotationY = ps.Emitter.rot.getCurve();
+                main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            }
+
         }
         else if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_Z)
         {
             main.startRotation3D = true;
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            //main.startRotationY = ps.Emitter.rot.getNegativeCurve();
-            //main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-            main.startRotationZ = ps.Emitter.rot.getNegativeCurve();
+            if (exchange)
+            {
+                main.startRotationY = ps.Emitter.rot.getNegativeCurve();
+                main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            }
+            else
+            {
+                main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+                main.startRotationZ = ps.Emitter.rot.getNegativeCurve();
+            }
+
         }
         else
         {
