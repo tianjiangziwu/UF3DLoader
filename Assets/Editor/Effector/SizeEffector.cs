@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-public class SizeEffector : IEffector
+public class SizeEffector : IEffector, IFrame
 {
     private List<float> keyFrameLifeTime = new List<float>();
     private List<float> sizeX = new List<float>();
@@ -20,6 +20,49 @@ public class SizeEffector : IEffector
         var sizeModule = ups.sizeOverLifetime;
         sizeModule.enabled = true;
         sizeModule.separateAxes = true;
+        
+        var curvX = new UnityEngine.AnimationCurve();
+        var curvY = new UnityEngine.AnimationCurve();
+        var curvZ = new UnityEngine.AnimationCurve();
+        //重复的key第二次不会添加
+        for (int i = keyFrameLifeTime.Count - 1; i >= 0; --i)
+        {
+            curvX.AddKey(keyFrameLifeTime[i], sizeX[i]);
+            curvY.AddKey(keyFrameLifeTime[i], sizeY[i]);
+            curvZ.AddKey(keyFrameLifeTime[i], sizeZ[i]);
+        }
+        sizeModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[0], curvX);
+        sizeModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[1], curvY);
+        sizeModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[2], curvZ);
+    }
+
+    public void deserialize(JObject data)
+    {
+        var lifeTimeVec = StringUtil.SplitString<float>((string)data["keyFrameLifeTime"], new char[] { ',' });
+
+        var sizeXArray = StringUtil.SplitString<float>((string)data["sx"], new char[] { ',' });
+
+        var sizeZArray = StringUtil.SplitString<float>((string)data["sy"], new char[] { ',' });
+
+        var sizeYArray = StringUtil.SplitString<float>((string)data["sz"], new char[] { ',' });
+
+        for (int i = 0; i < lifeTimeVec.Count; ++i)
+        {
+            maxXYZ[0] = UnityEngine.Mathf.Max(maxXYZ[0], UnityEngine.Mathf.Abs(sizeXArray[i]));
+            maxXYZ[1] = UnityEngine.Mathf.Max(maxXYZ[1], UnityEngine.Mathf.Abs(sizeYArray[i]));
+            maxXYZ[2] = UnityEngine.Mathf.Max(maxXYZ[2], UnityEngine.Mathf.Abs(sizeZArray[i]));
+        }
+
+        for (int i = 0; i < lifeTimeVec.Count; ++i)
+        {
+            addKeyFrame(lifeTimeVec[i], sizeXArray[i] / maxXYZ[0], sizeYArray[i] / maxXYZ[1], sizeZArray[i] / maxXYZ[2]);
+        }
+
+        ModifyFrame();
+    }
+
+    public void ModifyFrame()
+    {
         int i = 0;
         int ki = 0;
         float[] tmpX = new float[gpuEffectorSizeKeyFrameMax];
@@ -65,43 +108,10 @@ public class SizeEffector : IEffector
             }
             ++i;
         }
-        var curvX = new UnityEngine.AnimationCurve();
-        var curvY = new UnityEngine.AnimationCurve();
-        var curvZ = new UnityEngine.AnimationCurve();
-        //重复的key第二次不会添加
-        for (i = tmpTime.Length - 1; i >= 0; --i)
-        {
-            curvX.AddKey(tmpTime[i], tmpX[i]);
-            curvY.AddKey(tmpTime[i], tmpY[i]);
-            curvZ.AddKey(tmpTime[i], tmpZ[i]);
-        }
-        sizeModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[0], curvX);
-        sizeModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[1], curvY);
-        sizeModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[2], curvZ);
-    }
-
-    public void deserialize(JObject data)
-    {
-        var lifeTimeVec = StringUtil.SplitString<float>((string)data["keyFrameLifeTime"], new char[] { ',' });
-
-        var sizeXArray = StringUtil.SplitString<float>((string)data["sx"], new char[] { ',' });
-
-        var sizeZArray = StringUtil.SplitString<float>((string)data["sy"], new char[] { ',' });
-
-        var sizeYArray = StringUtil.SplitString<float>((string)data["sz"], new char[] { ',' });
-
-        for (int i = 0; i < lifeTimeVec.Count; ++i)
-        {
-            maxXYZ[0] = UnityEngine.Mathf.Max(maxXYZ[0], UnityEngine.Mathf.Abs(sizeXArray[i]));
-            maxXYZ[1] = UnityEngine.Mathf.Max(maxXYZ[1], UnityEngine.Mathf.Abs(sizeYArray[i]));
-            maxXYZ[2] = UnityEngine.Mathf.Max(maxXYZ[2], UnityEngine.Mathf.Abs(sizeZArray[i]));
-
-        }
-
-        for (int i = 0; i < lifeTimeVec.Count; ++i)
-        {
-            addKeyFrame(lifeTimeVec[i], sizeXArray[i] / maxXYZ[0], sizeYArray[i] / maxXYZ[1], sizeZArray[i] / maxXYZ[2]);
-        }
+        keyFrameLifeTime = tmpTime.ToList();
+        sizeX = tmpX.ToList();
+        sizeY = tmpY.ToList();
+        sizeZ = tmpZ.ToList();
     }
 
     private void addKeyFrame(float ratio, float valueX, float valueY, float valueZ)

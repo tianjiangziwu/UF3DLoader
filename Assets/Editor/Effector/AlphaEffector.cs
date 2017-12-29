@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-public class AlphaEffector : IEffector
+public class AlphaEffector : IEffector, IFrame
 {
     private List<float> keyFrameLifeTime = new List<float>();
     private List<uint> a = new List<uint>();
@@ -18,6 +18,7 @@ public class AlphaEffector : IEffector
         for (int i = 0; i < lifeTimeVec.Length; i++){
             addKeyFrame(float.Parse(lifeTimeVec[i]), uint.Parse(aVec[i]));
         }
+        ModifyFrame();
     }
 
     private void addKeyFrame(float ratio, uint alpha)
@@ -61,5 +62,41 @@ public class AlphaEffector : IEffector
         gradient.SetKeys(gck, gak);
         colorModule.enabled = true;
         colorModule.color = new UnityEngine.ParticleSystem.MinMaxGradient(gradient);
+    }
+
+    public const int gpuEffectorRgbaKeyFrameMax = 5;
+
+    public void ModifyFrame()
+    {
+        int i = 0;
+        int ki = 0;
+        float[] tmpTime = new float[gpuEffectorRgbaKeyFrameMax];
+        uint[] tmpa = new uint[gpuEffectorRgbaKeyFrameMax];
+        while (i < gpuEffectorRgbaKeyFrameMax)
+        {
+            if (ki < keyFrameLifeTime.Count)
+            {
+                tmpTime[i] = keyFrameLifeTime[ki];
+                tmpa[i] = a[ki];
+            }
+            else
+            {
+                tmpTime[i] = keyFrameLifeTime[keyFrameLifeTime.Count - 1];
+                tmpa[i] = a[keyFrameLifeTime.Count - 1];
+            }
+            //前后帧时间夹逼到0-1
+            if (i == 0)
+            {
+                tmpTime[i] = 0;
+            }
+            else if (i == gpuEffectorRgbaKeyFrameMax - 1)
+            {
+                tmpTime[i] = 1;
+            }
+            ++ki;
+            ++i;
+        }
+        keyFrameLifeTime = tmpTime.ToList();
+        a = tmpa.ToList();
     }
 }

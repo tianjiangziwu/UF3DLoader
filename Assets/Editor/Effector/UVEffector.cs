@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-public class UVEffector : IEffector
+public class UVEffector : IEffector, IFrame
 {
     // useless
     private float scaleU = 1.0f;
@@ -29,6 +29,7 @@ public class UVEffector : IEffector
 
         scaleU = (float)data["scaleU"];
         scaleV = (float)data["scaleV"];
+		ModifyFrame();
     }
 
     private void addKeyFrame(float ratio, float uVal, float vVal)
@@ -47,5 +48,50 @@ public class UVEffector : IEffector
     public void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
         throw new NotImplementedException();
+    }
+
+    public const int gpuEffectorKeyFrameMax = 3;
+
+    public void ModifyFrame()
+    {
+        int i = 0;
+        int ki = 0;
+        float[] tmpTime = new float[gpuEffectorKeyFrameMax];
+        float[] tmpu = new float[gpuEffectorKeyFrameMax];
+        float[] tmpv = new float[gpuEffectorKeyFrameMax];
+        while (i < gpuEffectorKeyFrameMax)
+        {
+            if (ki < keyFrameLifeTime.Count)
+            {
+                tmpu[i] = u[ki];
+                tmpv[i] = v[ki];
+                tmpTime[i] = keyFrameLifeTime[ki];
+            }
+            else
+            {
+                tmpu[i] = u[keyFrameLifeTime.Count - 1];
+                tmpv[i] = v[keyFrameLifeTime.Count - 1];
+                tmpTime[i] = keyFrameLifeTime[keyFrameLifeTime.Count - 1];
+            }
+            //前后帧时间夹逼到0-1
+            if (i == 0)
+                tmpTime[i] = 0;
+            else if (i == gpuEffectorKeyFrameMax - 1)
+                tmpTime[i] = 1;
+
+            if (i == 0 && keyFrameLifeTime[ki] > 0)
+            {
+
+            }
+            else
+            {
+                ++ki;
+            }
+            ++i;
+        }
+
+        keyFrameLifeTime = tmpTime.ToList();
+        u = tmpu.ToList();
+        v = tmpv.ToList();
     }
 }
