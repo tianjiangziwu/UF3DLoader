@@ -32,17 +32,25 @@ public static class PrimitiveHelper
         GameObject gameObject = GameObject.CreatePrimitive(type);
         Mesh mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
 
+        var retMesh = new Mesh();
+        retMesh.name = "quad00";
+        retMesh.vertices = mesh.vertices;
+        retMesh.uv = mesh.uv;
+        retMesh.triangles = mesh.triangles;
+        //UnityEditor.AssetDatabase.CreateAsset(tmpmesh, SceneFileCopy.GetRelativeMeshDir() + "quad00.prefab");
+        //UnityEditor.AssetDatabase.Refresh();
+
         if (rotate)
         {
-            RotateMeshVertices(mesh, new Vector3(0, 0, 0), new Vector3(90, 0, 0));
-            mesh.RecalculateBounds();
-            mesh.RecalculateNormals();
+            RotateMeshVertices(retMesh, new Vector3(0, 0, 0), new Vector3(90, 0, 0));
+            retMesh.RecalculateBounds();
+            retMesh.RecalculateNormals();
         }
 
-        PrimitiveHelper.primitiveMeshes[type] = mesh;
+        PrimitiveHelper.primitiveMeshes[type] = retMesh;
 
         GameObject.DestroyImmediate(gameObject);
-        return mesh;
+        return retMesh;
     }
 
     /// <summary>
@@ -61,6 +69,14 @@ public static class PrimitiveHelper
             verts[i] = newRotation * (verts[i] - center) + center;
         }
         mesh.vertices = verts;
+        mesh.name = "quad90";
+        //var tmpmesh = new Mesh();
+        //tmpmesh.name = "quad90";
+        //tmpmesh.vertices = verts;
+        //tmpmesh.uv = mesh.uv;
+        //tmpmesh.triangles = mesh.triangles;
+        //UnityEditor.AssetDatabase.CreateAsset(tmpmesh, SceneFileCopy.GetRelativeMeshDir() + "quad90.prefab");
+        //UnityEditor.AssetDatabase.Refresh();
     }
 
     private static Mesh BuildQuad(float width, float height)

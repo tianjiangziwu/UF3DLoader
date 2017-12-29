@@ -18,6 +18,10 @@ public class ParticleSystemAssembler
     private static void AssembleParticleSystem(Uf3dLoader loader)
     {
         Dictionary<int, GameObject> particles = new Dictionary<int, GameObject>();
+        var root = new GameObject(Path.GetFileNameWithoutExtension(loader.StrFileName));
+        var rotateOffset = new Quaternion();
+        rotateOffset.eulerAngles = new Vector3(-90, 0, 0);
+        root.transform.localRotation = rotateOffset;
         for (int i = 0; i < loader.ParticleSystemList.Count; i++)
         {
             ParticleSystem ps = loader.ParticleSystemList[i];
@@ -26,18 +30,18 @@ public class ParticleSystemAssembler
             var mesh = AssembleMesh(ps, loader.Resource, true);
             var unityParticleSystem = new GameObject(ps.Name);
             unityParticleSystem.AddComponent<UnityEngine.ParticleSystem>();
-            
-            //if (ps.Parent != -1)
-            //{
-            //    var father = particles[ps.Parent];
-            //    unityParticleSystem.transform.parent = father.transform;
-            //}
 
             var matrix = ps.Matrix;
-            // 由于粒子发射器的朝向是+z轴，需要y轴朝上，绕x轴旋转-90度
-            var rotation1 = new Matrix4x4();
-            rotation1.SetTRS(new Vector3(0,0,0), Quaternion.Euler(-90, 0, 0), new Vector3(1, 1, 1));
-            matrix = ps.Matrix * rotation1;
+
+            if (ps.Parent != -1)
+            {
+                var father = particles[ps.Parent];
+                unityParticleSystem.transform.parent = father.transform;
+            }
+            else
+            {
+                unityParticleSystem.transform.parent = root.transform;
+            }
 
             TransformUtil.SetTransformFromMatrix(unityParticleSystem.transform, ref matrix);
 
