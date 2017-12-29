@@ -40,4 +40,12 @@ public class ValueTypeUtil
         }
         return curve;
     }
+
+    public static void NormalizeCurveAnchor(List<CurveAnchor> anchors, float scale)
+    {
+        for (int i = 0; i < anchors.Count; ++i)
+        {
+            anchors[i].Value = anchors[i].Value / scale;
+        }
+    }
 }

@@ -12,6 +12,8 @@ public class OneDCurve : IOneDValue
     /// </summary>
     private List<CurveAnchor> anchors = new List<CurveAnchor>();
 
+    private float maxCurveAnchorValue = 0.001f;
+
     /// <summary>
     /// 曲线的类型
     /// </summary>
@@ -25,9 +27,11 @@ public class OneDCurve : IOneDValue
         for (int i = 0; i < count; i++)
 		{
             var value = ((string)data["anchor_" + i]).Split(',');
+            maxCurveAnchorValue = UnityEngine.Mathf.Max(maxCurveAnchorValue, float.Parse(value[1]));
             anchors.Add(new CurveAnchor(float.Parse(value[0]), float.Parse(value[1])));
         }
-        
+
+        ValueTypeUtil.NormalizeCurveAnchor(anchors, maxCurveAnchorValue);
     }
 
     public float getMaxValue()
@@ -40,7 +44,7 @@ public class OneDCurve : IOneDValue
         float ret = 0;
         int i = 0;
         for (i = 0; i < anchors.Count - 1; i++)
-			{
+		{
             if (anchors[i + 1].Time > percent)
             {
                 ret = anchors[i].interpolate(anchors[i + 1], percent, curveType);
@@ -52,13 +56,13 @@ public class OneDCurve : IOneDValue
 
     public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(anchors));  
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors));  
         return ret;
     }
 
     public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
+        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
         return ret;
     }
 }
