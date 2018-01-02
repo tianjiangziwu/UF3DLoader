@@ -100,7 +100,11 @@ public class ParticleSystemAssembler
         var velocity = ups.velocityOverLifetime;
         if (ps.Emitter.directionByShape)
         {
-            velocity.enabled = false;
+            velocity.enabled = true;
+            velocity.space = ParticleSystemSimulationSpace.Local;
+            velocity.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            velocity.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
+            velocity.z = ps.Emitter.velocity.getCurve();
             return;
         }
         velocity.enabled = true;

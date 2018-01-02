@@ -24,7 +24,7 @@ public class UF3DMenu
         //}
         Uf3dLoader loader = new Uf3dLoader();
         string[] names = new string[] { "smoke", "xuanfeng0", "explosion1", "xuanfeng" , "UltraISO", "baofa" , "chuizi1", "shuoji", "jian1" };
-        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\" + names[0] + ".uf3d");
+        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\" + names[3] + ".uf3d");
 
     }
 }
