@@ -17,16 +17,16 @@ public class OneDConst : IOneDValue
         value = (float)data["value"];
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal, float scale = 1.0f)
     {
         UnityEngine.ParticleSystem.MinMaxCurve ret;
         if (flag == ValueTypeUtil.CurveType.Rotation)
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(value * UnityEngine.Mathf.PI / 180.0f);
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(value * UnityEngine.Mathf.PI / 180.0f * scale);
         }
         else
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(value);
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(value * scale);
         }
         return ret;
     }
@@ -36,16 +36,16 @@ public class OneDConst : IOneDValue
         return value;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal, float scale = 1.0f)
     {
         UnityEngine.ParticleSystem.MinMaxCurve ret;
         if (flag == ValueTypeUtil.CurveType.Rotation)
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-value * UnityEngine.Mathf.PI / 180.0f);
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-value * UnityEngine.Mathf.PI / 180.0f * scale);
         }
         else
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-value);
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-value * scale);
         }
         return ret;
     }

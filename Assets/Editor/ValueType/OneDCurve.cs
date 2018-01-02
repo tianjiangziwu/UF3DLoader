@@ -54,30 +54,30 @@ public class OneDCurve : IOneDValue
         return ret;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal, float scale = 1.0f)
     {
         UnityEngine.ParticleSystem.MinMaxCurve ret;
         if (flag == ValueTypeUtil.CurveType.Rotation)
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, false, UnityEngine.Mathf.PI / 180.0f));
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, false, UnityEngine.Mathf.PI / 180.0f * scale));
         }
         else
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors));
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, false, scale));
         }
         return ret;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal, float scale = 1.0f)
     {
         UnityEngine.ParticleSystem.MinMaxCurve ret;
         if (flag == ValueTypeUtil.CurveType.Rotation)
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true, UnityEngine.Mathf.PI / 180.0f));
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true, UnityEngine.Mathf.PI / 180.0f * scale));
         }
         else
         {
-            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true, scale));
         }
         return ret;
     }
