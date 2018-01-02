@@ -313,16 +313,16 @@ public class ParticleSystemAssembler
         if (ps.Emitter.UniformScale)
         {
             main.startSize3D = false;
-            main.startSizeX = ps.Emitter.sizeX.getCurve();
+            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
             main.startSizeY = main.startSizeX;
             main.startSizeZ = main.startSizeX;
         }
         else
         {
             main.startSize3D = true;
-            main.startSizeX = ps.Emitter.sizeX.getCurve();
-            main.startSizeY = ps.Emitter.sizeY.getCurve();
-            main.startSizeZ = ps.Emitter.sizeZ.getCurve();
+            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
+            main.startSizeY = ps.Emitter.sizeY.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
+            main.startSizeZ = ps.Emitter.sizeZ.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
         }
 
         main.startLifetime = ps.Emitter.lifeTime.getCurve();
