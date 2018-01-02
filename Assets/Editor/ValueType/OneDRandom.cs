@@ -26,15 +26,31 @@ public class OneDRandom : IOneDValue
         return min + (max - min) * UnityEngine.Random.Range(0.0f, 1.0f);
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(min, max);
+        UnityEngine.ParticleSystem.MinMaxCurve ret;
+        if (flag == ValueTypeUtil.CurveType.Rotation)
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(min * UnityEngine.Mathf.PI / 180.0f, max * UnityEngine.Mathf.PI / 180.0f);
+        }
+        else
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(min, max);
+        }
         return ret;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(-max, -min);
+        UnityEngine.ParticleSystem.MinMaxCurve ret;
+        if (flag == ValueTypeUtil.CurveType.Rotation)
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-max * UnityEngine.Mathf.PI / 180.0f, -min * UnityEngine.Mathf.PI / 180.0f);
+        }
+        else
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(-max, -min);
+        }
         return ret;
     }
 }

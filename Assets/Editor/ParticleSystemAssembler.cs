@@ -110,7 +110,7 @@ public class ParticleSystemAssembler
         //旋转轴向
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
-            module.x = ps.Emitter.rotVelocity.getCurve();
+            module.x = ps.Emitter.rotVelocity.getCurve(ValueTypeUtil.CurveType.Rotation);
             module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
         }
@@ -120,11 +120,11 @@ public class ParticleSystemAssembler
             if (exchange)
             {
                 module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-                module.z = ps.Emitter.rotVelocity.getCurve();
+                module.z = ps.Emitter.rotVelocity.getCurve(ValueTypeUtil.CurveType.Rotation);
             }
             else
             {
-                module.y = ps.Emitter.rotVelocity.getCurve();
+                module.y = ps.Emitter.rotVelocity.getCurve(ValueTypeUtil.CurveType.Rotation);
                 module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             }
             
@@ -135,13 +135,13 @@ public class ParticleSystemAssembler
             module.x = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             if (exchange)
             {
-                module.y = ps.Emitter.rotVelocity.getNegativeCurve();
+                module.y = ps.Emitter.rotVelocity.getNegativeCurve(ValueTypeUtil.CurveType.Rotation);
                 module.z = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             }
             else
             {
                 module.y = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
-                module.z = ps.Emitter.rotVelocity.getCurve();
+                module.z = ps.Emitter.rotVelocity.getCurve(ValueTypeUtil.CurveType.Rotation);
             }
         }
     }
@@ -228,7 +228,7 @@ public class ParticleSystemAssembler
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
             main.startRotation3D = true;
-            main.startRotationX = ps.Emitter.rot.getCurve();
+            main.startRotationX = ps.Emitter.rot.getCurve(ValueTypeUtil.CurveType.Rotation);
             main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
             main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f);
         }
@@ -240,11 +240,11 @@ public class ParticleSystemAssembler
             if (exchange)
             {
                 main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-                main.startRotationZ = ps.Emitter.rot.getCurve();
+                main.startRotationZ = ps.Emitter.rot.getCurve(ValueTypeUtil.CurveType.Rotation);
             }
             else
             {
-                main.startRotationY = ps.Emitter.rot.getCurve();
+                main.startRotationY = ps.Emitter.rot.getCurve(ValueTypeUtil.CurveType.Rotation);
                 main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
             }
 
@@ -255,13 +255,13 @@ public class ParticleSystemAssembler
             main.startRotationX = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
             if (exchange)
             {
-                main.startRotationY = ps.Emitter.rot.getNegativeCurve();
+                main.startRotationY = ps.Emitter.rot.getNegativeCurve(ValueTypeUtil.CurveType.Rotation);
                 main.startRotationZ = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
             }
             else
             {
                 main.startRotationY = new UnityEngine.ParticleSystem.MinMaxCurve(0.0f, 0.0f);
-                main.startRotationZ = ps.Emitter.rot.getCurve();
+                main.startRotationZ = ps.Emitter.rot.getCurve(ValueTypeUtil.CurveType.Rotation);
             }
 
         }

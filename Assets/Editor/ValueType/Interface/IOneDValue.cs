@@ -7,6 +7,6 @@ public interface IOneDValue:IValue
 {
     float getValue(float ratio);
     float getMaxValue();
-    UnityEngine.ParticleSystem.MinMaxCurve getCurve();
-    UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve();
+    UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal);
+    UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal);
 }

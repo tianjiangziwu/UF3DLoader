@@ -5,6 +5,12 @@ using System.Text;
 
 public class ValueTypeUtil
 {
+    public enum CurveType
+    {
+        Normal = 0,
+        Rotation = 1
+    }
+
     public static UnityEngine.Color GetColor(uint initialColor)
     {
         
@@ -31,13 +37,14 @@ public class ValueTypeUtil
         return gradient;
     }
 
-    public static UnityEngine.AnimationCurve GenerateAnimationCurve(List<CurveAnchor> anchors, bool negative = false)
+    public static UnityEngine.AnimationCurve GenerateAnimationCurve(List<CurveAnchor> anchors, bool negative = false, float valueScale = 1.0f)
     {
         var curve = new UnityEngine.AnimationCurve();
         foreach (CurveAnchor point in anchors)
         {
-            curve.AddKey(point.Time, point.Value * (negative ? -1.0f:1.0f));
+            curve.AddKey(point.Time, valueScale * point.Value * (negative ? -1.0f : 1.0f));
         }
+        CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curve);
         return curve;
     }
 

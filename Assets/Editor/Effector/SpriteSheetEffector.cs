@@ -46,6 +46,7 @@ public class SpriteSheetEffector : IEffector
             var curve = new UnityEngine.AnimationCurve();
             curve.AddKey(new Keyframe(0.0f, 0.0f));
             curve.AddKey(new Keyframe(1.0f, 1.0f));
+            CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curve);
             textureSheetAnimationModule.frameOverTime = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, curve);
             textureSheetAnimationModule.cycleCount = 1;
         }
@@ -54,6 +55,7 @@ public class SpriteSheetEffector : IEffector
             var curve = new UnityEngine.AnimationCurve();
             curve.AddKey(new Keyframe(0.0f, 0.0f));
             curve.AddKey(new Keyframe(1.0f, 1.0f));
+            CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curve);
             textureSheetAnimationModule.frameOverTime = new UnityEngine.ParticleSystem.MinMaxCurve(1.0f, curve);
             textureSheetAnimationModule.cycleCount = 1;
         }

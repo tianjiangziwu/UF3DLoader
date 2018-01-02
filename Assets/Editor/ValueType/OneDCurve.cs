@@ -54,15 +54,31 @@ public class OneDCurve : IOneDValue
         return ret;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getCurve()
+    public UnityEngine.ParticleSystem.MinMaxCurve getCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors));  
+        UnityEngine.ParticleSystem.MinMaxCurve ret;
+        if (flag == ValueTypeUtil.CurveType.Rotation)
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, false, UnityEngine.Mathf.PI / 180.0f));
+        }
+        else
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors));
+        }
         return ret;
     }
 
-    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve()
+    public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
     {
-        var ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
+        UnityEngine.ParticleSystem.MinMaxCurve ret;
+        if (flag == ValueTypeUtil.CurveType.Rotation)
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true, UnityEngine.Mathf.PI / 180.0f));
+        }
+        else
+        {
+            ret = new UnityEngine.ParticleSystem.MinMaxCurve(maxCurveAnchorValue, ValueTypeUtil.GenerateAnimationCurve(anchors, true));
+        }
         return ret;
     }
 }
