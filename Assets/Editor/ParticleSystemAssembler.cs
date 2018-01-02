@@ -19,8 +19,15 @@ public class ParticleSystemAssembler
     {
         Dictionary<int, GameObject> particles = new Dictionary<int, GameObject>();
         var root = new GameObject(Path.GetFileNameWithoutExtension(loader.StrFileName));
+        root.AddComponent<UnityEngine.ParticleSystem>();
+        UnityEngine.ParticleSystem rootUPS = root.GetComponent<UnityEngine.ParticleSystem>();
+        var tmpEmission = rootUPS.emission;
+        tmpEmission.enabled = false;
+        var tmpShape = rootUPS.shape;
+        tmpShape.enabled = false;
+
         var rotateOffset = new Quaternion();
-        rotateOffset.eulerAngles = new Vector3(-90, 0, 0);
+        rotateOffset.eulerAngles = new Vector3(0, 0, 0);
         root.transform.localRotation = rotateOffset;
         for (int i = 0; i < loader.ParticleSystemList.Count; i++)
         {
@@ -33,17 +40,27 @@ public class ParticleSystemAssembler
 
             var matrix = ps.Matrix;
 
-            if (ps.Parent != -1)
-            {
-                var father = particles[ps.Parent];
-                unityParticleSystem.transform.parent = father.transform;
-            }
-            else
-            {
-                unityParticleSystem.transform.parent = root.transform;
-            }
+            //if (ps.Parent != -1)
+            //{
+            //    var father = particles[ps.Parent];
+            //    unityParticleSystem.transform.parent = father.transform;
+            //}
+            //else
+            //{
+            //    unityParticleSystem.transform.parent = root.transform;
+            //}
+
+            unityParticleSystem.transform.parent = root.transform;
 
             TransformUtil.SetTransformFromMatrix(unityParticleSystem.transform, ref matrix);
+
+            var tmpRotation = unityParticleSystem.transform.localRotation;
+
+            Quaternion rotNeg90 = new Quaternion();
+            rotNeg90.eulerAngles = new Vector3(-90, 0, 0);
+
+            //local rotation tmpRotation * rotNeg90, NOT global rotation rotNeg90 * tmpRotation
+            unityParticleSystem.transform.localRotation = tmpRotation * rotNeg90;
 
             UnityEngine.ParticleSystem ups = unityParticleSystem.GetComponent<UnityEngine.ParticleSystem>();
 

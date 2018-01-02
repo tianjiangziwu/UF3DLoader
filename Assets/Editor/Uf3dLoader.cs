@@ -324,11 +324,11 @@ public class Uf3dLoader
         int parent = chunk.Bytes.ReadInt16();
         float frameSpeed = chunk.Bytes.ReadSingle();
 
-        //if (parent != -1)
-        //{
-        //    matrix = cascadeTransform[parent] * matrix;
-        //}
-        //cascadeTransform[chunk.Id] = matrix;
+        if (parent != -1)
+        {
+            matrix = cascadeTransform[parent] * matrix;
+        }
+        cascadeTransform[chunk.Id] = matrix;
 
         while (chunk.BytesAvailable() > 0)
         {

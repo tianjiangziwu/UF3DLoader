@@ -26,14 +26,14 @@ public class ForceEffector : IEffector
         if (forceModule.enabled)
         {
             forceModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[0] + forceModule.x.Evaluate(0.0f));
-            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[1] + forceModule.y.Evaluate(0.0f));
-            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[2] + forceModule.z.Evaluate(0.0f));
+            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(-force * forceDir[2] + forceModule.z.Evaluate(0.0f));
+            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[1] + forceModule.y.Evaluate(0.0f));
         }
         else
         {
             forceModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[0]);
-            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[1]);
-            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[2]);
+            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(-force * forceDir[2]);
+            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(force * forceDir[1]);
         }
         forceModule.enabled = true;
     }
