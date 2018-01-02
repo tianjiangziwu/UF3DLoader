@@ -4,6 +4,7 @@ using UnityEngine;
 public static class PrimitiveHelper
 {
     private static Dictionary<PrimitiveType, Mesh> primitiveMeshes = new Dictionary<PrimitiveType, Mesh>();
+    private static Dictionary<PrimitiveType, Mesh> primitiveRotateMeshes = new Dictionary<PrimitiveType, Mesh>();
 
     public static GameObject CreatePrimitive(PrimitiveType type, bool withCollider)
     {
@@ -19,12 +20,24 @@ public static class PrimitiveHelper
 
     public static Mesh GetPrimitiveMesh(PrimitiveType type, bool rotate = false)
     {
-        if (!PrimitiveHelper.primitiveMeshes.ContainsKey(type))
+        if (rotate)
         {
-            PrimitiveHelper.CreatePrimitiveMesh(type, rotate);
-        }
+            if (!PrimitiveHelper.primitiveRotateMeshes.ContainsKey(type))
+            {
+                PrimitiveHelper.CreatePrimitiveMesh(type, rotate);
+            }
 
-        return PrimitiveHelper.primitiveMeshes[type];
+            return PrimitiveHelper.primitiveRotateMeshes[type];
+        }
+        else
+        {
+            if (!PrimitiveHelper.primitiveMeshes.ContainsKey(type))
+            {
+                PrimitiveHelper.CreatePrimitiveMesh(type, rotate);
+            }
+
+            return PrimitiveHelper.primitiveMeshes[type];
+        }
     }
 
     private static Mesh CreatePrimitiveMesh(PrimitiveType type, bool rotate = false)
@@ -47,7 +60,15 @@ public static class PrimitiveHelper
             retMesh.RecalculateNormals();
         }
 
-        PrimitiveHelper.primitiveMeshes[type] = retMesh;
+        if (rotate)
+        {
+            PrimitiveHelper.primitiveRotateMeshes[type] = retMesh;
+        }
+        else
+        {
+            PrimitiveHelper.primitiveMeshes[type] = retMesh;
+
+        }
 
         GameObject.DestroyImmediate(gameObject);
         return retMesh;

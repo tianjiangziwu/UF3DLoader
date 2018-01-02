@@ -62,6 +62,9 @@ public class ParticleSystemAssembler
             //local rotation tmpRotation * rotNeg90, NOT global rotation rotNeg90 * tmpRotation
             unityParticleSystem.transform.localRotation = tmpRotation * rotNeg90;
 
+            //exchange y,z scale
+            unityParticleSystem.transform.localScale = new Vector3(unityParticleSystem.transform.localScale.x, unityParticleSystem.transform.localScale.z, unityParticleSystem.transform.localScale.y);
+
             UnityEngine.ParticleSystem ups = unityParticleSystem.GetComponent<UnityEngine.ParticleSystem>();
 
             //StreamWriter sw = new StreamWriter("D:\\ps.txt", false, Encoding.UTF8);
@@ -82,9 +85,27 @@ public class ParticleSystemAssembler
             FillRotationOverTimeModule(ups, ps);
             FillRenderModule(ups, ps);
 
+            FillExtraParam(ups, ps);
+
             FillEffector(ups, ps);
             particles.Add(ps.ChunkId, unityParticleSystem);
         }
+    }
+
+    private static void FillExtraParam(UnityEngine.ParticleSystem ups, ParticleSystem ps)
+    {
+        Mesh mesh;
+        if (ps.SurfId != 0)
+        {
+            mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
+        }
+        else
+        {
+            mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
+        }
+        UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(ups);
+        so.FindProperty("ShapeModule.m_Mesh").objectReferenceValue = mesh;
+        so.ApplyModifiedProperties();
     }
 
     private static void FillEffector(UnityEngine.ParticleSystem ups, ParticleSystem ps)
@@ -223,6 +244,11 @@ public class ParticleSystemAssembler
                 shape.shapeType = ParticleSystemShapeType.ConeVolume;
             }
             
+            if (!asConeShape.Shell && !asConeShape.Volum)
+            {
+                shape.shapeType = ParticleSystemShapeType.Cone;
+            }
+
             shape.angle = asConeShape.Angle;
             shape.radius = asConeShape.Radius;
             shape.length = asConeShape.Length;
