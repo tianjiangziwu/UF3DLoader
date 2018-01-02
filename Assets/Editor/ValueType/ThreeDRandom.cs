@@ -17,6 +17,16 @@ public class ThreeDRandom : IThreeDValue
 
         vec = ((string)data["maxValue"]).Split(',');
         max = new Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
+
+        for (int i = 0; i < 3; ++i)
+        {
+            if (max[i] < min[i])
+            {
+                var tmp = max[i];
+                max[i] = min[i];
+                min[i] = tmp;
+            }
+        }
     }
 
     public Vector3 getValue(float ratio)

@@ -210,13 +210,52 @@ public class ParticleSystemAssembler
 
     private static void FillEmissionModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
-        
+        var emissionModule = ups.emission;
+        emissionModule.enabled = true;
+        var startTime = ups.main.duration;
+        var particles = ps.RenderParam.ParticleNumber;
+        if (ps.Emitter.startTime is OneDConst)
+        {
+            if (!ps.RenderParam.Loop)
+            {
+                emissionModule.rateOverTime = 0.0f;
+                UnityEngine.ParticleSystem.Burst[] burst = new UnityEngine.ParticleSystem.Burst[1];
+                burst[0].cycleCount = 1;
+                burst[0].minCount = (short)particles;
+                burst[0].maxCount = (short)particles;
+                burst[0].repeatInterval = startTime;
+                burst[0].time = ps.Emitter.startTime.getCurve().Evaluate(1.0f);
+                emissionModule.SetBursts(burst);
+            }
+        }
+        else
+        {
+            emissionModule.rateOverTime = new UnityEngine.ParticleSystem.MinMaxCurve((particles + 0.1f) / (startTime));
+        }
     }
 
     private static void FillMainModule(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
         UnityEngine.ParticleSystem.MainModule main = ups.main;
-        main.maxParticles = ps.RenderParam.ParticleNumber;
+        if (ps.Emitter.startTime is OneDConst)
+        {
+            if (!ps.RenderParam.Loop)
+            {
+                main.duration = 0.1f;
+            }
+            else
+            {
+                var curve = ps.Emitter.lifeTime.getCurve();
+                main.duration = UnityEngine.Mathf.Max(curve.Evaluate(0.0f), curve.Evaluate(1.0f));
+                throw new Exception(string.Format("{0}", "没有实现方法"));
+            }
+        }
+        else
+        {
+            var curve = ps.Emitter.lifeTime.getCurve();
+            main.duration = UnityEngine.Mathf.Max(curve.Evaluate(0.0f), curve.Evaluate(1.0f));
+        }
+        main.maxParticles = ps.RenderParam.ParticleNumber * 2;
         main.loop = ps.RenderParam.Loop;
         main.simulationSpace = ps.RenderParam.IsWorldParticle ? ParticleSystemSimulationSpace.World : ParticleSystemSimulationSpace.Local;
         main.prewarm = ps.RenderParam.Prewarm > 0.0f ? true : false;

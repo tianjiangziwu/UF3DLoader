@@ -14,11 +14,17 @@ public class OneDRandom : IOneDValue
     {
         min = (float)data["min"];
         max = (float)data["max"];
+        if (max < min)
+        {
+            var tmp = max;
+            max = min;
+            min = tmp;
+        }
     }
 
     public float getMaxValue()
     {
-        throw new NotImplementedException();
+        return max;
     }
 
     public float getValue(float ratio)

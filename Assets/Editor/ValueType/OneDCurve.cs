@@ -36,7 +36,7 @@ public class OneDCurve : IOneDValue
 
     public float getMaxValue()
     {
-        throw new NotImplementedException();
+        return maxCurveAnchorValue;
     }
 
     public float getValue(float percent)

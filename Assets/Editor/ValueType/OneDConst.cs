@@ -33,7 +33,7 @@ public class OneDConst : IOneDValue
 
     public float getMaxValue()
     {
-        throw new NotImplementedException();
+        return value;
     }
 
     public UnityEngine.ParticleSystem.MinMaxCurve getNegativeCurve(ValueTypeUtil.CurveType flag = ValueTypeUtil.CurveType.Normal)
