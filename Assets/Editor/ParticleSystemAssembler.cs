@@ -270,15 +270,17 @@ public class ParticleSystemAssembler
             main.startRotation3D = false;
         }
 
-        main.startSize3D = true;
+        
         if (ps.Emitter.UniformScale)
         {
+            main.startSize3D = false;
             main.startSizeX = ps.Emitter.sizeX.getCurve();
             main.startSizeY = main.startSizeX;
             main.startSizeZ = main.startSizeX;
         }
         else
         {
+            main.startSize3D = true;
             main.startSizeX = ps.Emitter.sizeX.getCurve();
             main.startSizeY = ps.Emitter.sizeY.getCurve();
             main.startSizeZ = ps.Emitter.sizeZ.getCurve();
