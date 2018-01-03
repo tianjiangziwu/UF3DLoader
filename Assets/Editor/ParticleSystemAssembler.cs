@@ -21,6 +21,9 @@ public class ParticleSystemAssembler
         var root = new GameObject(Path.GetFileNameWithoutExtension(loader.StrFileName));
         root.AddComponent<UnityEngine.ParticleSystem>();
         UnityEngine.ParticleSystem rootUPS = root.GetComponent<UnityEngine.ParticleSystem>();
+        var rootMain = rootUPS.main;
+        rootMain.duration = 0.1f;
+        rootMain.loop = false;
         var tmpEmission = rootUPS.emission;
         tmpEmission.enabled = false;
         var tmpShape = rootUPS.shape;
@@ -89,6 +92,9 @@ public class ParticleSystemAssembler
 
             FillEffector(ups, ps);
             particles.Add(ps.ChunkId, unityParticleSystem);
+
+            rootMain.loop = rootMain.loop | ups.main.loop;
+            rootMain.duration = UnityEngine.Mathf.Max(rootMain.duration, ups.main.duration);
         }
     }
 
