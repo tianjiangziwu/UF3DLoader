@@ -94,18 +94,22 @@ public class ParticleSystemAssembler
 
     private static void FillExtraParam(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
-        Mesh mesh;
-        if (ps.SurfId != 0)
-        {
-            mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
-        }
-        else
-        {
-            mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
-        }
-        UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(ups);
-        so.FindProperty("ShapeModule.m_Mesh").objectReferenceValue = mesh;
-        so.ApplyModifiedProperties();
+        //var psr = ups.GetComponent<ParticleSystemRenderer>();
+        //Mesh mesh;
+        //if (ps.SurfId != 0)
+        //{
+        //    psr.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
+            
+        //}
+        //else
+        //{
+
+        //    psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Cube, true);
+        //}      
+        //UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(ups);
+        //MeshRenderer cc = new MeshRenderer();
+        //so.FindProperty("ShapeModule.m_Mesh").objectReferenceValue = mesh;
+        //so.ApplyModifiedProperties();
     }
 
     private static void FillEffector(UnityEngine.ParticleSystem ups, ParticleSystem ps)
