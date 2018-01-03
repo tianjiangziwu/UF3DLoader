@@ -319,6 +319,8 @@ public class Uf3dLoader
         BinaryReader input = chunk.Bytes;
         string type = ReadUtil.ReadUTF(chunk.Bytes);
         string name = ReadUtil.ReadUTF(chunk.Bytes);
+        //名字不能包含\
+        name = System.Text.RegularExpressions.Regex.Replace(name, @"/+|\*+|\\+", string.Empty);
         UnityEngine.Matrix4x4 matrix = ReadMatrix3D(chunk.Bytes, _compressionLevel);
         int layer = chunk.Bytes.ReadInt16();
         int parent = chunk.Bytes.ReadInt16();

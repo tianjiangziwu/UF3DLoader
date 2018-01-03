@@ -298,13 +298,13 @@ public class ParticleSystemAssembler
         {
             if (!ps.RenderParam.Loop)
             {
-                main.duration = 0.1f;
+                main.duration = ps.Emitter.startTime.getMaxValue() + 0.1f;
             }
             else
             {
                 var curve = ps.Emitter.lifeTime.getCurve();
                 main.duration = UnityEngine.Mathf.Max(curve.Evaluate(0.0f), curve.Evaluate(1.0f));
-                throw new Exception(string.Format("{0}", "没有实现方法"));
+                //throw new Exception(string.Format("{0}", "没有实现方法"));
             }
         }
         else
