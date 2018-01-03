@@ -537,7 +537,15 @@ public class ParticleSystemAssembler
     {
         string texName = (resource[ps.TexId] as Texture3D).Name;
 
-        ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + ".mat";
+        if (!File.Exists(SceneFileCopy.GetAbsoluteMaterialDir() + ps.Name + ".mat"))
+        {
+            ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + ".mat";
+        }
+        else
+        {
+            ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + "_"+ Guid.NewGuid().ToString() + ".mat";
+        }
+        
 
         Material mtl = MaterialFactory.createMaterial(ps);
 
@@ -575,11 +583,20 @@ public class ParticleSystemAssembler
             //实例化一个Texture2D，宽和高设置可以是任意的，因为当使用LoadImage方法会对Texture2D的宽和高会做相应的调整
             //Texture2D tex2D = new Texture2D(1,1);
             //tex2D.LoadImage(tex.Data);
-            if (!File.Exists(SceneFileCopy.GetAbsoluteTextureDir() + tex.Name))
+            var fileName = string.Empty;
+            //if (!File.Exists(SceneFileCopy.GetAbsoluteTextureDir() + tex.Name))
             {
-                SaveFile(SceneFileCopy.GetAbsoluteTextureDir() + tex.Name, tex.Data);
+                fileName = tex.Name;
+                ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
+                
             }
-            ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + tex.Name;
+            //else
+            //{
+            //    fileName = tex.Name.Substring(0, UnityEngine.Mathf.Max(0, tex.Name.Length - 4)) + "_" + Guid.NewGuid().ToString() + tex.Name.Substring(tex.Name.Length - 4, 4);
+            //    ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
+            //}
+            ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
+            SaveFile(SceneFileCopy.GetAbsoluteTextureDir() + fileName, tex.Data);
             tex2D = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.Texture2DPath, typeof(Texture2D)) as Texture2D;
             UnityEditor.TextureImporter textureImporter = UnityEditor.AssetImporter.GetAtPath(ps.UnityResourceParam.Texture2DPath) as UnityEditor.TextureImporter;
             UnityEditor.TextureImporterSettings settings = new UnityEditor.TextureImporterSettings();
