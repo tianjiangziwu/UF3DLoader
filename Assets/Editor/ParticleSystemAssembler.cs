@@ -122,7 +122,19 @@ public class ParticleSystemAssembler
     {
         foreach(var effect in ps.Effectors)
         {
-            effect.ApplyToUnityParticleSystem(ups, ps);
+            try
+            {
+                effect.ApplyToUnityParticleSystem(ups, ps);
+            }
+            catch(NotImplementedException ex)
+            {
+                UnityEngine.Debug.LogErrorFormat("{0},{1}", ex.Message, effect.GetType().ToString());
+            }
+            finally
+            {
+                    
+            }
+            
         }
     }
 
@@ -274,6 +286,17 @@ public class ParticleSystemAssembler
         if (ps.Emitter.startTime is OneDConst)
         {
             if (!ps.RenderParam.Loop)
+            {
+                emissionModule.rateOverTime = 0.0f;
+                UnityEngine.ParticleSystem.Burst[] burst = new UnityEngine.ParticleSystem.Burst[1];
+                burst[0].cycleCount = 1;
+                burst[0].minCount = (short)particles;
+                burst[0].maxCount = (short)particles;
+                burst[0].repeatInterval = startTime;
+                burst[0].time = ps.Emitter.startTime.getCurve().Evaluate(1.0f);
+                emissionModule.SetBursts(burst);
+            }
+            else if (ps.RenderParam.Loop && ps.Emitter.startTime is OneDConst)
             {
                 emissionModule.rateOverTime = 0.0f;
                 UnityEngine.ParticleSystem.Burst[] burst = new UnityEngine.ParticleSystem.Burst[1];
@@ -441,9 +464,16 @@ public class ParticleSystemAssembler
             gradient.colorKeys = startColor.gradient.colorKeys;
             ret = new UnityEngine.ParticleSystem.MinMaxGradient(gradient);
         }
+        else if (startColor.mode == ParticleSystemGradientMode.Color && alpha.mode == ParticleSystemCurveMode.TwoConstants)
+        {
+            Color origionColor = startColor.Evaluate(0.0f);
+            Color min = new Color(origionColor.r, origionColor.g, origionColor.b, alpha.constantMin);
+            Color max = new Color(origionColor.r, origionColor.g, origionColor.b, alpha.constantMax);
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(min, max);
+        }
         else
         {
-            Debug.LogFormat("ParticleSystemGradientMode:{0},ParticleSystemCurveMode:{1}颜色和Alpha通道的合并未实现", startColor.mode, alpha.mode);
+            Debug.LogFormat("ParticleSystemGradientMode:{0},ParticleSystemCurveMode:{1}\t颜色和Alpha通道的合并未实现", startColor.mode, alpha.mode);
         }
         return ret;
     }
@@ -537,15 +567,7 @@ public class ParticleSystemAssembler
     {
         string texName = (resource[ps.TexId] as Texture3D).Name;
 
-        if (!File.Exists(SceneFileCopy.GetAbsoluteMaterialDir() + ps.Name + ".mat"))
-        {
-            ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + ".mat";
-        }
-        else
-        {
-            ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + "_"+ Guid.NewGuid().ToString() + ".mat";
-        }
-        
+        ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + ".mat";
 
         Material mtl = MaterialFactory.createMaterial(ps);
 

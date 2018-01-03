@@ -12,6 +12,7 @@ public class Uf3dLoader
     private string _strFileName = string.Empty;
     private int _compressionLevel = 0;
     private Dictionary<int, System.Object> resource = new Dictionary<int, System.Object>();
+    private Dictionary<string, int> uniqueName = new Dictionary<string, int>();
 
     public string StrFileName
     {
@@ -321,6 +322,20 @@ public class Uf3dLoader
         string name = ReadUtil.ReadUTF(chunk.Bytes);
         //名字不能包含\
         name = System.Text.RegularExpressions.Regex.Replace(name, @"/+|\*+|\\+", string.Empty);
+        if (!uniqueName.ContainsKey(name))
+        {
+            uniqueName.Add(name, 1);
+        }
+        else
+        {
+            uniqueName[name]++;
+            if (uniqueName[name] > 1)
+            {
+                name = name + uniqueName[name].ToString();
+            }
+        }
+        
+
         UnityEngine.Matrix4x4 matrix = ReadMatrix3D(chunk.Bytes, _compressionLevel);
         int layer = chunk.Bytes.ReadInt16();
         int parent = chunk.Bytes.ReadInt16();

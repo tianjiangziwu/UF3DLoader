@@ -12,7 +12,7 @@ public class OrbitEffector : IEffector
 
     public void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
-        //throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void deserialize(JObject data)
