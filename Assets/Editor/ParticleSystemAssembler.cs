@@ -239,6 +239,23 @@ public class ParticleSystemAssembler
             var asBoxShape = ps.Emitter.shape as BoxShape;
             shape.shapeType = ParticleSystemShapeType.Box;
             shape.box = asBoxShape.getScale();
+            //exchange y,z
+            shape.box = new Vector3(shape.box.x, shape.box.z, shape.box.y);
+
+            //append offset
+            Vector3 postion = new Vector3(ups.transform.localPosition.x, ups.transform.localPosition.y, ups.transform.localPosition.z );
+            Vector3 scale = new Vector3(ups.transform.localScale.x, ups.transform.localScale.y, ups.transform.localScale.z);
+            Quaternion rotation = new Quaternion(ups.transform.localRotation.x, ups.transform.localRotation.y, ups.transform.localRotation.z, ups.transform.localRotation.w);
+
+            //消除之前旋转-90度
+            Quaternion rot90 = new Quaternion();
+            rot90.eulerAngles = new Vector3(90, 0, 0);
+            rotation = rotation * rot90;
+
+            Matrix4x4 matrix = new Matrix4x4();
+            matrix.SetTRS(postion, rotation, scale);
+
+            ups.transform.localPosition = ups.transform.localPosition + TransformUtil.DeltaTransformVector(matrix, asBoxShape.getPosition());
         }
         else if (ps.Emitter.shape is SphereShape)
         {
@@ -320,14 +337,13 @@ public class ParticleSystemAssembler
         if (ps.Emitter.startTime is OneDConst)
         {
             if (!ps.RenderParam.Loop)
-            {
+            {                                                                                     
                 main.duration = ps.Emitter.startTime.getMaxValue() + 0.1f;
             }
             else
             {
                 var curve = ps.Emitter.lifeTime.getCurve();
                 main.duration = UnityEngine.Mathf.Max(curve.Evaluate(0.0f), curve.Evaluate(1.0f));
-                //throw new Exception(string.Format("{0}", "没有实现方法"));
             }
         }
         else
