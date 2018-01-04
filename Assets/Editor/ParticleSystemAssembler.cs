@@ -487,6 +487,30 @@ public class ParticleSystemAssembler
             Color max = new Color(origionColor.r, origionColor.g, origionColor.b, alpha.constantMax);
             ret = new UnityEngine.ParticleSystem.MinMaxGradient(min, max);
         }
+        else if (startColor.mode == ParticleSystemGradientMode.TwoGradients && alpha.mode == ParticleSystemCurveMode.Constant)
+        {
+            var tmpmin = startColor.gradientMin;
+            var alphaKeys = tmpmin.alphaKeys;
+            for (int i = 0; i < alphaKeys.Length; ++i)
+            {
+                alphaKeys[i].alpha = alpha.constant;
+            }
+            var min = new Gradient();
+            min.alphaKeys = alphaKeys;
+            min.colorKeys = tmpmin.colorKeys;
+
+            var tmpmax = startColor.gradientMax;
+            alphaKeys = tmpmax.alphaKeys;
+            for (int i = 0; i < alphaKeys.Length; ++i)
+            {
+                alphaKeys[i].alpha = alpha.constant;
+            }
+            var max = new Gradient();
+            max.alphaKeys = alphaKeys;
+            max.colorKeys = tmpmax.colorKeys;
+
+            ret = new UnityEngine.ParticleSystem.MinMaxGradient(min, max);
+        }
         else
         {
             Debug.LogFormat("ParticleSystemGradientMode:{0},ParticleSystemCurveMode:{1}\t颜色和Alpha通道的合并未实现", startColor.mode, alpha.mode);

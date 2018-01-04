@@ -26,14 +26,14 @@ public class GravityEffector : IEffector
         if (forceModule.enabled)
         {
             forceModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[0] + forceModule.x.Evaluate(0.0f));
-            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[1] + forceModule.y.Evaluate(0.0f));
-            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[2] + forceModule.z.Evaluate(0.0f));
+            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(-gravity * gravityDir[2] + forceModule.y.Evaluate(0.0f));
+            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[1] + forceModule.z.Evaluate(0.0f));
         }
         else
         {
             forceModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[0]);
-            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[1]);
-            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[2]);
+            forceModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(-gravity * gravityDir[2]);
+            forceModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(gravity * gravityDir[1]);
         }
         forceModule.enabled = true;
     }
