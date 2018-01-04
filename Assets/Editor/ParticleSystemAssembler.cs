@@ -127,8 +127,6 @@ public class ParticleSystemAssembler
                 main.startSpeed = 0.0f;
                 var shape = ups.shape;
                 shape.enabled = false;
-                var vec = ups.velocityOverLifetime;
-                vec.enabled = false;
             }
         }
         else if (ps.Emitter.shape is BoxShape && ps.Emitter.directionByShape)
@@ -144,7 +142,13 @@ public class ParticleSystemAssembler
         else if (ps.Emitter.shape is ConeShape && ps.Emitter.directionByShape)
         {
             var coneShpae = ps.Emitter.shape as ConeShape;
-
+            if((coneShpae.Radius < 0.01f && coneShpae.Length < 0.01f) || (90.0f - coneShpae.Angle) < 0.01f)
+            {
+                var main = ups.main;
+                main.startSpeed = 0.0f;
+                var shape = ups.shape;
+                shape.enabled = false;
+            }
         }
     }
 
@@ -304,18 +308,22 @@ public class ParticleSystemAssembler
         else if (ps.Emitter.shape is ConeShape)
         {
             var asConeShape = ps.Emitter.shape as ConeShape;
-            if (asConeShape.Shell)
+
+            if (!asConeShape.Shell && !asConeShape.Volum)
+            {
+                shape.shapeType = ParticleSystemShapeType.Cone;
+            }
+            else if (!asConeShape.Shell && asConeShape.Volum)
+            {
+                shape.shapeType = ParticleSystemShapeType.ConeVolume;
+            }
+            else if (asConeShape.Shell && !asConeShape.Volum)
             {
                 shape.shapeType = ParticleSystemShapeType.ConeShell;
             }
             else
             {
-                shape.shapeType = ParticleSystemShapeType.ConeVolume;
-            }
-            
-            if (!asConeShape.Shell && !asConeShape.Volum)
-            {
-                shape.shapeType = ParticleSystemShapeType.Cone;
+                shape.shapeType = ParticleSystemShapeType.ConeVolumeShell;
             }
 
             shape.angle = asConeShape.Angle;
