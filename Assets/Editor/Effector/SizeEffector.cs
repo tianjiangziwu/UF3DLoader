@@ -29,15 +29,23 @@ public class SizeEffector : IEffector, IFrame
         {
             curvX.AddKey(keyFrameLifeTime[i], sizeX[i]);
             curvY.AddKey(keyFrameLifeTime[i], sizeY[i]);
-            //curvZ.AddKey(keyFrameLifeTime[i], sizeZ[i]);
-            curvZ.AddKey(keyFrameLifeTime[i], sizeZ[i] <= 0.001f ? 1.0f:sizeZ[i] );
+            curvZ.AddKey(keyFrameLifeTime[i], sizeZ[i]);
+            //curvZ.AddKey(keyFrameLifeTime[i], sizeZ[i] <= 0.001f ? 1.0f:sizeZ[i] );
         }
         CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curvX);
         CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curvY);
         CurveExtended.CurveExtension.ForceUpdateAllLinearTangents(curvZ);
         sizeModule.x = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[0], curvX);
         //exchange yz
-        sizeModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[2] <= 0.001f ? 1.0f : maxXYZ[2], curvZ);
+        if (maxXYZ[2] <= 0.001f)
+        {
+            sizeModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[1], curvY);
+        }
+        else
+        {
+            sizeModule.y = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[2], curvZ);
+        }
+        
         sizeModule.z = new UnityEngine.ParticleSystem.MinMaxCurve(maxXYZ[1], curvY);
         
     }
@@ -48,9 +56,9 @@ public class SizeEffector : IEffector, IFrame
 
         var sizeXArray = StringUtil.SplitString<float>((string)data["sx"], new char[] { ',' });
 
-        var sizeZArray = StringUtil.SplitString<float>((string)data["sy"], new char[] { ',' });
+        var sizeYArray = StringUtil.SplitString<float>((string)data["sy"], new char[] { ',' });
 
-        var sizeYArray = StringUtil.SplitString<float>((string)data["sz"], new char[] { ',' });
+        var sizeZArray = StringUtil.SplitString<float>((string)data["sz"], new char[] { ',' });
 
         for (int i = 0; i < lifeTimeVec.Count; ++i)
         {
