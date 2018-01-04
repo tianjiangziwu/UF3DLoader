@@ -23,7 +23,9 @@ public class UF3DMenu
         //    loader.parse(SceneFileCopy.SourceFile);
         //}
         Uf3dLoader loader = new Uf3dLoader();
-        string[] names = new string[] { "smoke", "xuanfeng0", "explosion1", "xuanfeng" , "UltraISO", "baofa" , "chuizi", "shuoji", "jian1", "GLOW", "HanDiYiJi", "HuoZhiQuan", "DianShanLeiMing", "TianLei_BaoZha", "JinQuTeXiao", "TianLei", "11" };
-        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\" + names[names.Length - 1] + ".uf3d");
+        string[] names1 = new string[] { "Dun", "FengBaoShuangXiong_JuQi" , "FengBaoShuangXiong_QiangKouHuoHua", "ChiBang" };
+        string[] names = new string[] { "smoke", "xuanfeng0", "explosion1", "xuanfeng" , "UltraISO", "baofa" , "chuizi", "shuoji", "jian1", "GLOW", "HanDiYiJi", "HuoZhiQuan", "DianShanLeiMing", "TianLei_BaoZha", "JinQuTeXiao", "TianLei", "hjnbe" };
+        var tmp = names1;
+        loader.parse("D:\\Users\\Administrator\\Desktop\\uf3d\\" + tmp[tmp.Length - 1] + ".uf3d");
     }
 }
