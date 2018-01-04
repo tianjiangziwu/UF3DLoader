@@ -11,6 +11,7 @@ public class AccelerateEffector : IEffector
 
     public void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps)
     {
+        //速度方向有关
         throw new NotImplementedException();
     }
 

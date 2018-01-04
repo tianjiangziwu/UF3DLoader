@@ -124,15 +124,18 @@ public class RenderParam
             }
             else if (billboardType == BillboardType_X)
             {
-                ret = (int)ParticleSystemRenderMode.VerticalBillboard;
+                //todo
+                ret = (int)ParticleSystemRenderMode.HorizontalBillboard; 
             }
             else if (billboardType == BillboardType_Y)
             {
-                ret = (int)ParticleSystemRenderMode.HorizontalBillboard;
+                //todo
+                ret = (int)ParticleSystemRenderMode.VerticalBillboard;
             }
             else if (billboardType == BillboardType_Z)
             {
-
+                //todo
+                ret = (int)ParticleSystemRenderMode.HorizontalBillboard;
             }
             else if (billboardType == BillboardType_Normal)
             {

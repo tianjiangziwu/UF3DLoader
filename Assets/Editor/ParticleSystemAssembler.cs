@@ -116,6 +116,36 @@ public class ParticleSystemAssembler
         //MeshRenderer cc = new MeshRenderer();
         //so.FindProperty("ShapeModule.m_Mesh").objectReferenceValue = mesh;
         //so.ApplyModifiedProperties();
+
+        //特殊情况
+        if (ps.Emitter.shape is SphereShape && ps.Emitter.directionByShape)
+        {
+            var asSphereShape = ps.Emitter.shape as SphereShape;
+           if (asSphereShape.RadiusBig < 0.01f)
+            {
+                var main = ups.main;
+                main.startSpeed = 0.0f;
+                var shape = ups.shape;
+                shape.enabled = false;
+                var vec = ups.velocityOverLifetime;
+                vec.enabled = false;
+            }
+        }
+        else if (ps.Emitter.shape is BoxShape && ps.Emitter.directionByShape)
+        {
+            var asBoxShape = ps.Emitter.shape as BoxShape;
+            var size = asBoxShape.getScale();
+            if(size.magnitude < 0.01f)
+            {
+                var shape = ups.shape;
+                shape.enabled = false;
+            }
+        }
+        else if (ps.Emitter.shape is ConeShape && ps.Emitter.directionByShape)
+        {
+            var coneShpae = ps.Emitter.shape as ConeShape;
+
+        }
     }
 
     private static void FillEffector(UnityEngine.ParticleSystem ups, ParticleSystem ps)
@@ -409,16 +439,17 @@ public class ParticleSystemAssembler
         if (ps.Emitter.UniformScale)
         {
             main.startSize3D = false;
-            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
+            //main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
+            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal);
             main.startSizeY = main.startSizeX;
             main.startSizeZ = main.startSizeX;
         }
         else
         {
             main.startSize3D = true;
-            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
-            main.startSizeY = ps.Emitter.sizeY.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
-            main.startSizeZ = ps.Emitter.sizeZ.getCurve(ValueTypeUtil.CurveType.Normal, 1.0f / ups.transform.localScale[0]);
+            main.startSizeX = ps.Emitter.sizeX.getCurve(ValueTypeUtil.CurveType.Normal);
+            main.startSizeY = ps.Emitter.sizeY.getCurve(ValueTypeUtil.CurveType.Normal);
+            main.startSizeZ = ps.Emitter.sizeZ.getCurve(ValueTypeUtil.CurveType.Normal);
         }
 
         main.startLifetime = ps.Emitter.lifeTime.getCurve();
