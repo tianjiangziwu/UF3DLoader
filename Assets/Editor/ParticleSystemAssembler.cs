@@ -170,7 +170,7 @@ public class ParticleSystemAssembler
         var module = ups.rotationOverLifetime;
         module.enabled = true;
         module.separateAxes = true;
-        bool exchange = (ParticleSystemRenderMode.Mesh == (ParticleSystemRenderMode)ps.RenderParam.BillboardType);
+        bool exchange = (ParticleSystemRenderMode.Mesh == (ParticleSystemRenderMode)ps.RenderParam.BillboardType) || ps.SurfId != 0;
         //旋转轴向
         if (ps.RenderParam.RotateAxis == RenderParam.RotateAxis_X)
         {
@@ -511,6 +511,12 @@ public class ParticleSystemAssembler
                 psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
             }
         }
+        //如果有mesh，强制使用meshbillboard 类型
+        if (ps.SurfId != 0)
+        {
+            psr.renderMode = ParticleSystemRenderMode.Mesh;
+            psr.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
+        }
         psr.material = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MaterialPath, typeof(Material)) as Material;
 
     }
@@ -551,7 +557,8 @@ public class ParticleSystemAssembler
                     );
                 uv1[i] = new Vector2(
                     surf.VertexVector[i * surf.SizePerVertex + surf.Offset[Surface3D.UV0] + 0],
-                    surf.VertexVector[i * surf.SizePerVertex + surf.Offset[Surface3D.UV0] + 1]
+					//unity的UV坐标和as3不一样
+                    1 - surf.VertexVector[i * surf.SizePerVertex + surf.Offset[Surface3D.UV0] + 1]
                     );
             }
 
