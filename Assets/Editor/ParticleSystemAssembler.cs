@@ -149,6 +149,12 @@ public class ParticleSystemAssembler
                 var shape = ups.shape;
                 shape.enabled = false;
             }
+            //没有半径，速度为0
+            else if (coneShpae.Radius < 0.01f && (ups.main.startSpeed.Evaluate(0.0f) < 0.0001f && ups.main.startSpeed.Evaluate(1.0f) < 0.0001f))
+            {
+                var shape = ups.shape;
+                shape.enabled = false;
+            }
         }
     }
 
