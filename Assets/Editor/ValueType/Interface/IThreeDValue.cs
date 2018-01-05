@@ -8,5 +8,5 @@ public interface IThreeDValue : IValue
 {
     UnityEngine.Vector3 getValue(float ratio);
 
-    List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve();
+    List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true);
 }

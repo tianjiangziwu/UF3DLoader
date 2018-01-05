@@ -35,7 +35,7 @@ public class ThreeDRandom : IThreeDValue
         return new Vector3(tdc[0].Evaluate(ratio), tdc[1].Evaluate(ratio), tdc[2].Evaluate(ratio));
     }
 
-    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true)
     {
         var ret = new List<UnityEngine.ParticleSystem.MinMaxCurve>();
         ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(min.x, max.x));

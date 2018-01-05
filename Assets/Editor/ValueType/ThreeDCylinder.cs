@@ -63,7 +63,7 @@ public class ThreeDCylinder : IThreeDValue
     /// 未实现
     /// </summary>
     /// <returns></returns>
-    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true)
     {
         var result = new Vector3();
 

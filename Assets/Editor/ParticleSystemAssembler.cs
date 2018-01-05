@@ -199,6 +199,10 @@ public class ParticleSystemAssembler
             velocity.y = direction[1];
             velocity.z = direction[2];
         }
+        else if (!ps.Emitter.directionByShape && ps.Emitter.direction is ThreeDSphere)
+        {
+            velocity.enabled = false;
+        }
         else
         {
             UnityEngine.Debug.LogFormat("{0}暂时未支持的类型", ps.Emitter.direction.ToString());

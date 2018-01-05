@@ -56,7 +56,7 @@ public class ThreeDCurve : IThreeDValue
         ValueTypeUtil.NormalizeCurveAnchor(anchorsZ, maxXYZ[2]);
     }
 
-    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true)
     {
         var ret = new List<UnityEngine.ParticleSystem.MinMaxCurve>();
         List<List<CurveAnchor>> tmp = new List<List<CurveAnchor>> { anchorsX, anchorsY, anchorsZ };

@@ -15,12 +15,21 @@ public class ThreeDConst : IThreeDValue
         value = new Vector3(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
     }
 
-    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true)
     {
         var ret = new List<UnityEngine.ParticleSystem.MinMaxCurve>();
-        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[0]));
-        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[1]));
-        ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[2]));
+        if (changYZ)
+        {
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[0]));
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(-value[2]));
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[1]));
+        }
+        else
+        {
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[0]));
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[1]));
+            ret.Add(new UnityEngine.ParticleSystem.MinMaxCurve(value[2]));
+        }
         return ret;
     }
 

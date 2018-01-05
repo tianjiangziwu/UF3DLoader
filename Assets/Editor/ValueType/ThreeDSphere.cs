@@ -69,7 +69,7 @@ public class ThreeDSphere : IThreeDValue
     /// 实现有问题，不是随机，返回了固定值
     /// </summary>
     /// <returns></returns>
-    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve()
+    public List<UnityEngine.ParticleSystem.MinMaxCurve> getThreeDCurve(bool changYZ = true)
     {
         Vector3 result = new Vector3();
         var radius  = (OuterRadius - InnerRadius) * UnityEngine.Random.Range(0.0f, 1.0f) + InnerRadius;
