@@ -12,16 +12,34 @@ using System.IO;
 /// </summary>
 public class UF3DMenu
 {
-    
+    public static List<string> GetFilesPath(string dir)
+    {
+        List<string> ret = new List<string>();
+        DirectoryInfo info = new DirectoryInfo(dir);
+        foreach (FileInfo child in info.GetFiles("*.uf3d", SearchOption.AllDirectories))
+        {
+            ret.Add(child.FullName);
+        }
+        return ret;
+    }
 
     [MenuItem("WDWebTools/导入特效", false, 0)]
     public static void OpenDiagle()
     {
-        if (SceneFileCopy.OpenUf3dFile())
+        //if (SceneFileCopy.OpenUf3dFile())
+        //{
+        //    Uf3dLoader loader = new Uf3dLoader();
+        //    loader.parse(SceneFileCopy.SourceFile);
+        //}
+        var list = GetFilesPath(@"D:\特效\out");
+        foreach (var item in list)
         {
             Uf3dLoader loader = new Uf3dLoader();
-            loader.parse(SceneFileCopy.SourceFile);
+            SceneFileCopy.openUF3D(item);
+            loader.parse(item);
         }
+        
+
         //"D:\特效\out\战斗中特效\粒子特效\命中效果\圆心扩散\冲击波 绿\ZhenJi.uf3d"
         //D:\特效\out\待整理文档\2017.8月需求\RPG\征服者机甲\核子轰击
         //"D:\特效\out\翅膀分类专题\创世之翼\ChiBangShouQi.uf3d"
