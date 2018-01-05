@@ -308,7 +308,7 @@ public class ParticleSystemAssembler
             var asCylinderShape = ps.Emitter.shape as CylinderShape;
             shape.shapeType = ParticleSystemShapeType.ConeVolume;
             shape.angle = 0.0f;
-            shape.radius = asCylinderShape.RadiusBig < 0.01f? 1.0f: asCylinderShape.RadiusBig;
+            shape.radius = asCylinderShape.RadiusBig;
             shape.length = asCylinderShape.Height;
         }
         else if (ps.Emitter.shape is ConeShape)
