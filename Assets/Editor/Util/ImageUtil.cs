@@ -7,6 +7,33 @@ using UnityEngine;
 public class ImageUtil
 {
 
+    public static Texture2D rotateTexture180(Texture2D image)
+    {
+        Texture2D target = new Texture2D(image.width, image.height, TextureFormat.ARGB32, true);    //flip image width<>height, as we rotated the image, it might be a rect. not a square image
+
+        Color32[] pixels = image.GetPixels32(0);
+        pixels = rotateTextureGrid180(pixels, image.width, image.height);
+        target.SetPixels32(pixels);
+        target.Apply();
+
+        //flip image width<>height, as we rotated the image, it might be a rect. not a square image
+        return target;
+    }
+
+    //顺时针转180度
+    private static Color32[] rotateTextureGrid180(Color32[] tex, int wid, int hi)
+    {
+        Color32[] ret = new Color32[wid * hi];      //reminder we are flipping these in the target
+
+        int len = wid * hi;
+        for (int i = 0; i < len; ++i)
+        {
+            ret[i] = tex[len - 1 - i];
+        }
+
+        return ret;
+    }
+
     public static Texture2D rotateTexture(Texture2D image, bool isClockWise = true)
     {
 
