@@ -144,8 +144,8 @@ public class RenderParam
             else if (billboardType == BillboardType_Stretch)
             {
                 //todo
-                //ret = (int)ParticleSystemRenderMode.Stretch;
-                ret = (int)ParticleSystemRenderMode.Billboard;
+                ret = (int)ParticleSystemRenderMode.Stretch;
+                //ret = (int)ParticleSystemRenderMode.Billboard;
             }
             return ret;
         }

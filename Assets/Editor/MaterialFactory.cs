@@ -23,7 +23,8 @@ public class MaterialFactory
             case RenderParam.BLEND_ADDITIVE:
                 //one one
                 //todo ????????
-                ret = "Particles/Multiply (Double)";
+                //ret = "Particles/Multiply (Double)";
+                ret = "Particles/Additive";
                 break;
             case RenderParam.BLEND_ALPHA_BLENDED:
                 ///SOURCE_ALPHA, ONE_MINUS_SOURCE_ALPHA
@@ -31,7 +32,8 @@ public class MaterialFactory
                 break;
             case RenderParam.BLEND_ALPHA_BLENDED2:
                 ///ONE, ONE_MINUS_SOURCE_ALPHA
-                ret = "Particles/Alpha Blended Premultiply";
+                //ret = "Particles/Alpha Blended Premultiply";
+                ret = "Particles/~Additive-Multiply";
                 break;
             case RenderParam.BLEND_MULTIPLY:
                 //DESTINATION_COLOR, ONE_MINUS_SOURCE_ALPHA 

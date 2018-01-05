@@ -562,6 +562,7 @@ public class ParticleSystemAssembler
         
         ParticleSystemRenderer psr = ups.GetComponent<ParticleSystemRenderer>();
         psr.sortingOrder = ps.Layer;
+        var material = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MaterialPath, typeof(Material)) as Material;
         psr.renderMode = (ParticleSystemRenderMode)ps.RenderParam.BillboardType;
         if (psr.renderMode == ParticleSystemRenderMode.Mesh)
         {
@@ -574,13 +575,36 @@ public class ParticleSystemAssembler
                 psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
             }
         }
+        else if (psr.renderMode == ParticleSystemRenderMode.Stretch)
+        {
+            psr.lengthScale = 1.0f;
+            var texture = material.mainTexture as Texture2D;
+            var newtexture = ImageUtil.rotateTexture(texture, true);
+            newtexture.alphaIsTransparency = true;
+            newtexture.filterMode = texture.filterMode;
+            newtexture.wrapMode = texture.wrapMode;
+            newtexture.name = texture.name + "_rotNeg90";
+            material.SetTexture("_MainTex", newtexture);
+            float baseTilingX = 1f;
+            float baseTilingY = 1f;
+            float baseOffsetX = 0f;
+            float baseOffsetY = 0f;
+            material.SetTextureScale("_MainTex", new Vector2(baseTilingX, baseTilingY));
+            material.SetTextureOffset("_MainTex", new Vector2(baseOffsetX, baseOffsetY));
+            uint color = 0xFFFFFFFF;
+            material.SetColor("_Color", new Color(((color >> 16) & 0xFF) / 255.0f,
+                                            ((color >> 8) & 0xFF) / 255.0f,
+                                            (color & 0xFF) / 255.0f,
+                                            ((color >> 24) & 0xFF) / 255.0f));
+            UnityEditor.AssetDatabase.Refresh();
+        }
         //如果有mesh，强制使用meshbillboard 类型
         if (ps.SurfId != 0)
         {
             psr.renderMode = ParticleSystemRenderMode.Mesh;
             psr.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MeshPath, typeof(Mesh)) as Mesh;
         }
-        psr.material = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.MaterialPath, typeof(Material)) as Material;
+        psr.material = material;
 
     }
 
@@ -613,6 +637,7 @@ public class ParticleSystemAssembler
 
             for (int i = 0; i < verticesCountInMesh; ++i)
             {
+                //旋转方向
                 xyz[i] = new Vector3(
                     surf.VertexVector[i * surf.SizePerVertex + surf.Offset[Surface3D.POSITION] + 0],
                     surf.VertexVector[i * surf.SizePerVertex + surf.Offset[Surface3D.POSITION] + 1],
