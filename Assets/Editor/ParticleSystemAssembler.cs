@@ -35,6 +35,7 @@ public class ParticleSystemAssembler
         for (int i = 0; i < loader.ParticleSystemList.Count; i++)
         {
             ParticleSystem ps = loader.ParticleSystemList[i];
+            ps.RootFileName = root.name;
             var tex2D = AssembleTexture(ps, loader.Resource);
             var mtl = AssembleMaterial(ps, loader.Resource);
             var mesh = AssembleMesh(ps, loader.Resource, true);
@@ -96,6 +97,8 @@ public class ParticleSystemAssembler
             rootMain.loop = rootMain.loop | ups.main.loop;
             rootMain.duration = UnityEngine.Mathf.Max(rootMain.duration, ups.main.duration);
         }
+        UnityEngine.Object prefab = UnityEditor.PrefabUtility.CreateEmptyPrefab(SceneFileCopy.GetRelativePrefabDir(root.name) + root.name + ".prefab");
+        UnityEditor.PrefabUtility.ReplacePrefab(root, prefab, UnityEditor.ReplacePrefabOptions.ReplaceNameBased);
     }
 
     private static void FillExtraParam(UnityEngine.ParticleSystem ups, ParticleSystem ps)
@@ -583,7 +586,12 @@ public class ParticleSystemAssembler
             }
             else
             {
-                psr.mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true);
+                if (!File.Exists(SceneFileCopy.GetRelativeMeshDir(ps.RootFileName) + "quad90.prefab"))
+                {
+                    PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Quad, true, SceneFileCopy.GetRelativeMeshDir(ps.RootFileName) + "quad90.prefab");
+                }
+
+                psr.mesh = UnityEditor.AssetDatabase.LoadAssetAtPath(SceneFileCopy.GetRelativeMeshDir(ps.RootFileName) + "quad90.prefab", typeof(Mesh)) as Mesh;
             }
         }
         else if (psr.renderMode == ParticleSystemRenderMode.Stretch)
@@ -595,6 +603,8 @@ public class ParticleSystemAssembler
             newtexture.filterMode = texture.filterMode;
             newtexture.wrapMode = texture.wrapMode;
             newtexture.name = texture.name + "_rotNeg90";
+            //UnityEditor.AssetDatabase.CreateAsset(newtexture, SceneFileCopy.GetRelativeTextureDir(ps.RootFileName) + newtexture.name);
+            //UnityEditor.AssetDatabase.Refresh();
             material.SetTexture("_MainTex", newtexture);
             float baseTilingX = 1f;
             float baseTilingY = 1f;
@@ -637,7 +647,7 @@ public class ParticleSystemAssembler
             //obj.AddComponent<MeshRenderer>();
             //obj.GetComponent<MeshRenderer>().sharedMaterial = mtl;
 
-            ps.UnityResourceParam.MeshPath = SceneFileCopy.GetRelativeMeshDir() + ps.Name + ".prefab";
+            ps.UnityResourceParam.MeshPath = SceneFileCopy.GetRelativeMeshDir(ps.RootFileName) + ps.Name + ".prefab";
 
             Surface3D surf = resource[(int)ps.SurfId] as Surface3D;
             mesh = new Mesh();
@@ -689,7 +699,7 @@ public class ParticleSystemAssembler
     {
         string texName = (resource[ps.TexId] as Texture3D).Name;
 
-        ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir() + ps.Name + ".mat";
+        ps.UnityResourceParam.MaterialPath = SceneFileCopy.GetRelativeMaterialDir(ps.RootFileName) + ps.Name + ".mat";
 
         Material mtl = MaterialFactory.createMaterial(ps);
 
@@ -731,7 +741,7 @@ public class ParticleSystemAssembler
             //if (!File.Exists(SceneFileCopy.GetAbsoluteTextureDir() + tex.Name))
             {
                 fileName = tex.Name;
-                ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
+                ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir(ps.RootFileName) + fileName;
                 
             }
             //else
@@ -739,8 +749,8 @@ public class ParticleSystemAssembler
             //    fileName = tex.Name.Substring(0, UnityEngine.Mathf.Max(0, tex.Name.Length - 4)) + "_" + Guid.NewGuid().ToString() + tex.Name.Substring(tex.Name.Length - 4, 4);
             //    ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
             //}
-            ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir() + fileName;
-            SaveFile(SceneFileCopy.GetAbsoluteTextureDir() + fileName, tex.Data);
+            ps.UnityResourceParam.Texture2DPath = SceneFileCopy.GetRelativeTextureDir(ps.RootFileName) + fileName;
+            SaveFile(SceneFileCopy.GetAbsoluteTextureDir(ps.RootFileName) + fileName, tex.Data);
             tex2D = UnityEditor.AssetDatabase.LoadAssetAtPath(ps.UnityResourceParam.Texture2DPath, typeof(Texture2D)) as Texture2D;
             UnityEditor.TextureImporter textureImporter = UnityEditor.AssetImporter.GetAtPath(ps.UnityResourceParam.Texture2DPath) as UnityEditor.TextureImporter;
             UnityEditor.TextureImporterSettings settings = new UnityEditor.TextureImporterSettings();

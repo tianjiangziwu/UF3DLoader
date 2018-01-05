@@ -17,6 +17,8 @@ public class ZAxisRotationHeadingEffector : IEffector
         newtexture.wrapMode = texture.wrapMode;
         newtexture.name = texture.name + "_rot180";
         material.SetTexture("_MainTex", newtexture);
+        //UnityEditor.AssetDatabase.CreateAsset(newtexture, SceneFileCopy.GetRelativeTextureDir(ps.RootFileName) + newtexture.name);
+        //UnityEditor.AssetDatabase.Refresh();
         float baseTilingX = 1f;
         float baseTilingY = 1f;
         float baseOffsetX = 0f;

@@ -57,64 +57,85 @@ public class SceneFileCopy
         }
     }
 
-    public static bool OpenUf3dFile()
+    //public static bool OpenUf3dFile()
+    //{
+    //    OpenFileName ofn = new OpenFileName();
+    //    ofn.structSize = Marshal.SizeOf(ofn);
+    //    ofn.filter = "(*.uf3d)\0*.uf3d";
+    //    ofn.file = new string(new char[1024]);
+    //    ofn.maxFile = ofn.file.Length;
+    //    ofn.fileTitle = new string(new char[512]);
+    //    ofn.maxFileTitle = ofn.fileTitle.Length;
+    //    ofn.initialDir = UnityEngine.Application.dataPath;//默认路径  
+    //    ofn.title = "选择特效文件";
+    //    ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST|OFN_NOCHANGEDIR  
+    //    if (DllTest.GetOpenFileName(ofn))
+    //    {
+    //        copyData(ofn);
+    //        return true;
+    //    }
+    //    return false;
+    //}
+
+    //private static void copyData(OpenFileName ofn)
+    //{
+    //    sourceFile = ofn.file;
+    //    SourceFileName = ofn.fileTitle;
+    //    SourcePath = ofn.file.Substring(0, ofn.file.IndexOf(ofn.fileTitle));
+    //    createDirectory(GetAbsoluteTextureDir());
+    //    createDirectory(GetAbsoluteMaterialDir());
+    //    createDirectory(GetAbsoluteMeshDir());
+    //    createDirectory(GetAbsolutePrefabDir());
+    //}
+
+    public static void openUF3D(string path)
     {
-        OpenFileName ofn = new OpenFileName();
-        ofn.structSize = Marshal.SizeOf(ofn);
-        ofn.filter = "(*.uf3d)\0*.uf3d";
-        ofn.file = new string(new char[1024]);
-        ofn.maxFile = ofn.file.Length;
-        ofn.fileTitle = new string(new char[512]);
-        ofn.maxFileTitle = ofn.fileTitle.Length;
-        ofn.initialDir = UnityEngine.Application.dataPath;//默认路径  
-        ofn.title = "选择特效文件";
-        ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST|OFN_NOCHANGEDIR  
-        if (DllTest.GetOpenFileName(ofn))
-        {
-            copyData(ofn);
-            return true;
-        }
-        return false;
+        FileInfo file = new FileInfo(path);
+        var name = Path.GetFileNameWithoutExtension(path);
+        createDirectory(GetAbsoluteTextureDir(name));
+        createDirectory(GetAbsoluteMaterialDir(name));
+        createDirectory(GetAbsoluteMeshDir(name));
+        createDirectory(GetAbsolutePrefabDir(name));
     }
 
-    private static void copyData(OpenFileName ofn)
+    public static string GetAbsolutePrefabDir(string fileName)
     {
-        sourceFile = ofn.file;
-        SourceFileName = ofn.fileTitle;
-        SourcePath = ofn.file.Substring(0, ofn.file.IndexOf(ofn.fileTitle));
-        createDirectory(GetAbsoluteTextureDir());
-        createDirectory(GetAbsoluteMaterialDir());
-        createDirectory(GetAbsoluteMeshDir());
+        return workBaseDirectory + "/Resources/" + fileName + "/Prefab/";
     }
 
-    public static string GetAbsoluteTextureDir()
+    public static string GetRelativePrefabDir(string fileName)
     {
-        return workBaseDirectory + "/Resources/Textures/";
+        return "Assets/Resources/" + fileName + "/Prefab/";
     }
 
-    public static string GetRelativeTextureDir()
+    public static string GetAbsoluteTextureDir(string fileName)
     {
-        return "Assets/Resources/Textures/";
+        return workBaseDirectory + "/Resources/" + fileName + "/Textures/";
     }
 
-    public static string GetAbsoluteMaterialDir()
+    public static string GetRelativeTextureDir(string fileName)
     {
-        return workBaseDirectory + "/Resources/Materials/";
+        return "Assets/Resources/" + fileName + "/Textures/";
     }
 
-    public static string GetRelativeMaterialDir()
+    public static string GetAbsoluteMaterialDir(string fileName)
     {
-        return "Assets/Resources/Materials/";
+        return workBaseDirectory + "/Resources/" + fileName + "/Materials/";
     }
 
-    public static string GetAbsoluteMeshDir()
+    public static string GetRelativeMaterialDir(string fileName)
     {
-        return workBaseDirectory + "/Resources/Meshes/";
+        return "Assets/Resources/" + fileName + "/Materials/";
     }
 
-    public static string GetRelativeMeshDir()
+    public static string GetAbsoluteMeshDir(string fileName)
     {
-        return "Assets/Resources/Meshes/";
+        return workBaseDirectory + "/Resources/" + fileName + "/Meshes/";
+    }
+
+    public static string GetRelativeMeshDir(string fileName)
+    {
+        return "Assets/Resources/" + fileName + "/Meshes/";
     }
 
     public static void createDirectory(string path, bool removeOld = false)

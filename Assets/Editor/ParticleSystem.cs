@@ -18,6 +18,8 @@ public class ParticleSystem
     private uint surfId = 0;
     private Matrix4x4 matrix;
 
+    private string _fileName = string.Empty;
+
     //粒子发射器
     private Emitter emitter = null;
 
@@ -198,6 +200,19 @@ public class ParticleSystem
         set
         {
             effectors = value;
+        }
+    }
+
+    public string RootFileName
+    {
+        get
+        {
+            return _fileName;
+        }
+
+        set
+        {
+            _fileName = value;
         }
     }
 

@@ -18,13 +18,13 @@ public static class PrimitiveHelper
         return gameObject;
     }
 
-    public static Mesh GetPrimitiveMesh(PrimitiveType type, bool rotate = false)
+    public static Mesh GetPrimitiveMesh(PrimitiveType type, bool rotate = false, string path = "")
     {
         if (rotate)
         {
             if (!PrimitiveHelper.primitiveRotateMeshes.ContainsKey(type))
             {
-                PrimitiveHelper.CreatePrimitiveMesh(type, rotate);
+                PrimitiveHelper.CreatePrimitiveMesh(type, rotate, path);
             }
 
             return PrimitiveHelper.primitiveRotateMeshes[type];
@@ -40,7 +40,7 @@ public static class PrimitiveHelper
         }
     }
 
-    private static Mesh CreatePrimitiveMesh(PrimitiveType type, bool rotate = false)
+    private static Mesh CreatePrimitiveMesh(PrimitiveType type, bool rotate = false, string path = "")
     {
         GameObject gameObject = GameObject.CreatePrimitive(type);
         Mesh mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
@@ -68,6 +68,11 @@ public static class PrimitiveHelper
         {
             PrimitiveHelper.primitiveMeshes[type] = retMesh;
 
+        }
+
+        if (path.Length > 0)
+        {
+            UnityEditor.AssetDatabase.CreateAsset(retMesh, path);
         }
 
         GameObject.DestroyImmediate(gameObject);
