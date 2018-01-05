@@ -15,7 +15,7 @@ public class ForceEffector : IEffector
     {
         var vec = ((string)data["forceDir"]).Split(',');
         forceDir = new UnityEngine.Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
-        force = (float)data["force"];
+        force = (float)data["force"] * Uf3dLoader.vertexScale;
     }
 
     public void ApplyToUnityParticleSystem(UnityEngine.ParticleSystem ups, ParticleSystem ps)

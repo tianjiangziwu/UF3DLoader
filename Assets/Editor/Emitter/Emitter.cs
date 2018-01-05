@@ -34,6 +34,8 @@ public class Emitter : IDeserialize
     // YZ的缩放是否与X保持一致
     private bool _uniformScale;
 
+    private ParticleSystem _ps = null;
+
     public bool UniformScale
     {
         get
@@ -47,17 +49,38 @@ public class Emitter : IDeserialize
         }
     }
 
+    /// <summary>
+    /// 粒子特效
+    /// </summary>
+    public ParticleSystem Ps
+    {
+        get
+        {
+            return _ps;
+        }
+
+        set
+        {
+            _ps = value;
+        }
+    }
+
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
+        var isDefaultSuface = _ps.SurfId > 0 ? 1.0f : 2.0f;
         deserializeAttribute(data, "shape");
         deserializeAttribute(data, "lifeTime");
         deserializeAttribute(data, "startTime");
         deserializeAttribute(data, "color");
         deserializeAttribute(data, "alpha");
         deserializeAttribute(data, "sizeX");
+        sizeX.scaleValue(Uf3dLoader.vertexScale * isDefaultSuface);
         deserializeAttribute(data, "sizeY");
+        sizeY.scaleValue(Uf3dLoader.vertexScale * isDefaultSuface);
         deserializeAttribute(data, "sizeZ");
+        sizeZ.scaleValue(Uf3dLoader.vertexScale * isDefaultSuface);
         deserializeAttribute(data, "velocity");
+        velocity.scaleValue(Uf3dLoader.vertexScale);
         deserializeAttribute(data, "rot");
         deserializeAttribute(data, "rotVelocity");
         deserializeAttribute(data, "direction");

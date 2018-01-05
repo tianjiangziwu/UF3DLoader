@@ -54,4 +54,9 @@ public class OneDConst : IOneDValue
     {
         return value;
     }
+
+    public void scaleValue(float ratio = 1)
+    {
+        value = value * ratio;
+    }
 }

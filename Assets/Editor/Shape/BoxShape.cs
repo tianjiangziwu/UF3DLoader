@@ -29,8 +29,8 @@ public class BoxShape : IShape
     {
         //todo
         var value = ((string)data["rectFrom"]).Split((",").ToCharArray());
-        rectFrom = new Vector3(Convert.ToSingle(value[0]), Convert.ToSingle(value[1]), Convert.ToSingle(value[2]));
+        rectFrom = new Vector3(Convert.ToSingle(value[0]) * Uf3dLoader.vertexScale, Convert.ToSingle(value[1]) * Uf3dLoader.vertexScale, Convert.ToSingle(value[2]) * Uf3dLoader.vertexScale);
         value = ((string)data["rectTo"]).Split((",").ToCharArray());
-        rectTo = new Vector3(Convert.ToSingle(value[0]), Convert.ToSingle(value[1]), Convert.ToSingle(value[2]));
+        rectTo = new Vector3(Convert.ToSingle(value[0]) * Uf3dLoader.vertexScale, Convert.ToSingle(value[1]) * Uf3dLoader.vertexScale, Convert.ToSingle(value[2]) * Uf3dLoader.vertexScale);
     }
 }

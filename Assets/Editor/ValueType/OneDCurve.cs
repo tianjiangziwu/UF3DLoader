@@ -81,4 +81,9 @@ public class OneDCurve : IOneDValue
         }
         return ret;
     }
+
+    public void scaleValue(float ratio = 1)
+    {
+        maxCurveAnchorValue = maxCurveAnchorValue * ratio;
+    }
 }

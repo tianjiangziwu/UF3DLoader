@@ -19,6 +19,6 @@ public class OrbitEffector : IEffector
     {
         //todo -
         degree = (float)data["degree"];
-        radius = (float)data["radius"];
+        radius = (float)data["radius"] * Uf3dLoader.vertexScale;
     }
 }

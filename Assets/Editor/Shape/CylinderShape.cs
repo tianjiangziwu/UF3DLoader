@@ -53,8 +53,8 @@ public class CylinderShape : IShape
 
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
-        radiusBig = (float)data["radiusBig"];
-        radiusSmall = (float)data["radiusSmall"];
-        height = (float)data["height"];
+        radiusBig = (float)data["radiusBig"] * Uf3dLoader.vertexScale;
+        radiusSmall = (float)data["radiusSmall"] * Uf3dLoader.vertexScale;
+        height = (float)data["height"] * Uf3dLoader.vertexScale;
     }
 }

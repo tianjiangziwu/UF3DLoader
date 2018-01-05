@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 
 public class Uf3dLoader
 {
+    public static float vertexScale = 1.0f / 100.0f;
 
     private string _strFileName = string.Empty;
     private int _compressionLevel = 0;
@@ -210,6 +211,28 @@ public class Uf3dLoader
         //string jsonObject = ReadUtil.ReadUTF(data.Bytes);
     }
 
+    private Matrix4x4 ScaleTransform(Matrix4x4 matrix, float scale = 1.0f)
+    {
+        Matrix4x4 ret = new Matrix4x4();
+        ret.m00 = matrix.m00;
+        ret.m01 = matrix.m01;
+        ret.m02 = matrix.m02;
+        ret.m03 = matrix.m03 * scale;
+        ret.m10 = matrix.m10;
+        ret.m11 = matrix.m11;
+        ret.m12 = matrix.m12;
+        ret.m13 = matrix.m13 * scale;
+        ret.m20 = matrix.m20;
+        ret.m21 = matrix.m21;
+        ret.m22 = matrix.m22;
+        ret.m23 = matrix.m23 * scale;
+        ret.m30 = matrix.m30;
+        ret.m31 = matrix.m31;
+        ret.m32 = matrix.m32;
+        ret.m33 = matrix.m33;
+        return ret;
+    }
+
     private void ReadParticleSystem(string name, int layer, Matrix4x4 matrix, ReadChunk data, int parent, int chunkId)
     {
         int texId = data.Bytes.ReadUInt16();
@@ -220,7 +243,7 @@ public class Uf3dLoader
         ps.ChunkId = chunkId;
         ps.Name = name;
         ps.Layer = layer;
-        ps.Matrix = matrix;
+        ps.Matrix = ScaleTransform(matrix, Uf3dLoader.vertexScale);
         ps.TexId = texId;
         ps.SurfId = surfId;
         ps.Parent = parent;

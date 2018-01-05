@@ -22,7 +22,7 @@ public class AttractEffector : IEffector
     public void deserialize(JObject data)
     {
         var vec = ((string)data["attractPoint"]).Split(',');
-        attractPoint = new UnityEngine.Vector3(float.Parse(vec[0]), float.Parse(vec[1]), float.Parse(vec[2]));
+        attractPoint = new UnityEngine.Vector3(float.Parse(vec[0]) * Uf3dLoader.vertexScale, float.Parse(vec[1]) * Uf3dLoader.vertexScale, float.Parse(vec[2]) * Uf3dLoader.vertexScale);
         vel = (float)data["vel"];
     }
 }

@@ -204,6 +204,7 @@ public class ParticleSystem
     public ParticleSystem()
     {
         emitter = new Emitter();
+        emitter.Ps = this;
     }
 
     /// <summary>
@@ -243,9 +244,9 @@ public class ParticleSystem
         if (!renderParam.InfiniteBounds)
         {
             var bound = StringUtil.SplitString<float>((string)data["boundMin"], new char[] { ',' });
-            renderParam.BoundMin = new Vector3(bound[0], bound[1], bound[2]);
+            renderParam.BoundMin = new Vector3(bound[0] * Uf3dLoader.vertexScale, bound[1] * Uf3dLoader.vertexScale, bound[2] * Uf3dLoader.vertexScale);
             bound = StringUtil.SplitString<float>((string)data["boundMax"], new char[] { ',' });
-            renderParam.BoundMax = new Vector3(bound[0], bound[1], bound[2]);
+            renderParam.BoundMax = new Vector3(bound[0] * Uf3dLoader.vertexScale, bound[1] * Uf3dLoader.vertexScale, bound[2] * Uf3dLoader.vertexScale);
         }
     }
 }

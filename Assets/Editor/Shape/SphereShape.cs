@@ -36,8 +36,8 @@ public class SphereShape : IShape
 
     public void deserialize(Newtonsoft.Json.Linq.JObject data)
     {
-        radiusBig = (float)data["radiusBig"];
-        radiusSmall = (float)data["radiusSmall"];
+        radiusBig = (float)data["radiusBig"] * Uf3dLoader.vertexScale;
+        radiusSmall = (float)data["radiusSmall"] * Uf3dLoader.vertexScale;
     }
 }
 

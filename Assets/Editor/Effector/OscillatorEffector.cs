@@ -20,6 +20,6 @@ public class OscillatorEffector : IEffector
         
         degree = (float)data["degree"];
         //todo -
-        distance = (float)data["distance"];
+        distance = (float)data["distance"] * Uf3dLoader.vertexScale;
     }
 }

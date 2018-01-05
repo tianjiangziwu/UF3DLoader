@@ -59,4 +59,10 @@ public class OneDRandom : IOneDValue
         }
         return ret;
     }
+
+    public void scaleValue(float ratio = 1)
+    {
+        min = min * ratio;
+        max = max * ratio;
+    }
 }

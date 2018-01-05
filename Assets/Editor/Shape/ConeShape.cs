@@ -87,7 +87,7 @@ public class ConeShape : IShape
         Shell = (bool)data["shell"];
         Volum = (bool)data["volum"];
         Angle = (float)data["angle"];
-        Length = (float)data["length"];
-        Radius = (float)data["radius"];
+        Length = (float)data["length"] * Uf3dLoader.vertexScale;
+        Radius = (float)data["radius"] * Uf3dLoader.vertexScale;
     }
 }
