@@ -43,8 +43,8 @@ public class AlphaEffector : IEffector, IFrame
 
         for (int i = 0; i < keyFrameLifeTime.Count; ++i)
         {
-            gak[i].time = keyFrameLifeTime[i] / 255.0f;
-            gak[i].alpha = a[i];
+            gak[i].time = keyFrameLifeTime[i];
+            gak[i].alpha = a[i] / 255.0f;
         }
         UnityEngine.GradientColorKey[] gck;
         if (colorModule.enabled)

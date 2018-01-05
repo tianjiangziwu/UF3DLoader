@@ -264,7 +264,8 @@ public class ParticleSystemAssembler
         {
             var asSphereShape = ps.Emitter.direction as ThreeDSphere;
             shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = asSphereShape.OuterRadius;
+            //shape.radius = asSphereShape.OuterRadius
+            shape.radius = 0.0f;
             return;
         }
 
